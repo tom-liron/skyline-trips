@@ -1,0 +1,96 @@
+/* ---------- Header Frame ---------- */
+.Header {
+    position: sticky;
+    top: 0;
+    background: #1f2937; /* dark slate */
+    border-bottom: 1px solid #374151;
+    z-index: 50;
+}
+
+/* ---------- Inner Layout ---------- */
+.Header .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    flex-wrap: wrap;
+}
+
+/* ---------- Brand ---------- */
+.Header .brand {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #e0e7ff;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.Header .brand:hover {
+    color: #93c5fd;
+}
+
+/* ---------- Navigation ---------- */
+.Header .nav {
+    display: flex;
+    gap: 14px;
+    flex: 1 1 auto;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.Header .nav a {
+    text-decoration: none;
+    color: #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* Active style only when exact match */
+.Header .nav a.active,
+.Header .nav a[aria-current="page"] {
+    background: #334155;
+    color: #f8fafc;
+}
+
+.Header .nav a:hover {
+    background: #334155;
+    color: #f8fafc;
+}
+
+/* ---------- Auth Area ---------- */
+.Header .auth {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #e5e7eb;
+    padding: 4px 8px;
+}
+
+/* ---------- Logout Button ---------- */
+.Header .auth .link-like,
+.Header .auth button {
+    display: inline-flex !important;
+    width: auto !important;
+    border: none;
+    background: #334155;
+    color: #60a5fa;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 20px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.Header .auth .linklike:hover,
+.Header .auth button:hover {
+    background: #1e40af;
+    color: #f1f5f9;
+}

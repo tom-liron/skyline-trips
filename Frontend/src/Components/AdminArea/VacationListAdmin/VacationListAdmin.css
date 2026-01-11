@@ -1,0 +1,107 @@
+/* ---------- Page shell ---------- */
+.VacationListAdmin {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px clamp(16px, 6vw, 64px);
+  background: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* ---------- Loading spinner ---------- */
+.VacationListAdmin .spinner {
+  width: 22px;
+  height: 22px;
+  margin: 12px auto;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite, fadeIn 150ms ease-in forwards;
+  opacity: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Empty state message ---------- */
+.VacationListAdmin .EmptyState {
+  margin: 24px auto;
+}
+
+/* ---------- Grid layout ---------- */
+.VacationListAdmin .grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+}
+
+/* ---------- Pagination spacing ---------- */
+.VacationListAdmin .Pagination {
+  margin-top: 14px;
+}
+
+/* ---------- Action buttons (edit/delete) ---------- */
+.VacationCard .actions .edit,
+.VacationCard .actions .delete {
+  appearance: none;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+.VacationCard .actions .edit:hover {
+  background: #f9fafb;
+  border-color: #cbd5e1;
+}
+
+.VacationCard .actions .edit:active,
+.VacationCard .actions .delete:active {
+  transform: translateY(1px);
+}
+
+.VacationCard .actions .delete {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fff;
+}
+
+.VacationCard .actions .delete:hover {
+  background: #fff5f5;
+  border-color: #fca5a5;
+}
+
+/* ---------- Responsive layout ---------- */
+@media (max-width: 992px) {
+  .VacationListAdmin {
+    padding: 16px;
+  }
+
+  .VacationListAdmin .grid {
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .VacationListAdmin .grid {
+    grid-template-columns: 1fr;
+  }
+}

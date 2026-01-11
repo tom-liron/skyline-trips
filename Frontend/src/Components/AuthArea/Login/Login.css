@@ -1,0 +1,172 @@
+/* ===== Login Page Layout ===== */
+
+/* Full-page layout container */
+.LoginPage {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+/* Centered wrapper for form */
+.login-center {
+  position: relative;
+  z-index: 1;
+  flex: 1;          /* fills remaining height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+/* Footer at bottom */
+.page-footer {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  text-align: center;
+  margin-top: auto;  /* pushes footer down when page is short */
+  padding: 12px 16px;
+}
+
+
+/* ===== Auth Card ===== */
+
+/* White box containing the form */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  padding: 22px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+
+/* ===== Form Styling ===== */
+
+.AuthForm {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Title inside the login form */
+.title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  font-size: 22px;
+  color: #111827;
+}
+
+/* Label for each input */
+.AuthForm label {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Input fields */
+.AuthForm input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  background: #fff;
+}
+
+/* Input focus effect */
+.AuthForm input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px #dbeafe;
+}
+
+
+/* ===== Buttons ===== */
+
+.actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.primary {
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:hover {
+  background: #1d4ed8;
+}
+
+
+/* ===== Divider + Register CTA ===== */
+
+/* Divider between button and sign-up link */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 8px;
+  color: #9ca3af;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  justify-content: center;
+}
+
+.divider::before, 
+.divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #e5e7eb;
+}
+
+/* "Don’t have an account?" section */
+.register-cta {
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-cta .link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.register-cta .link:hover {
+  text-decoration: underline;
+}
+
+
+/* ===== Password Toggle ===== */
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 36px; /* make room for the eye icon */
+}
+
+.eye-icon {
+  position: absolute;
+  top: 53%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6b7280; /* optional styling */
+}

@@ -1,0 +1,60 @@
+/* ---------- Shared Error Page Styles ---------- */
+
+.Page404,
+.Unauthorized,
+.Forbidden {
+    max-width: 520px;
+    margin: 80px auto;
+    padding: 32px 24px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    color: #1f2937;
+}
+
+/* ---------- Error Headings ---------- */
+
+.Page404 h2,
+.Unauthorized h2,
+.Forbidden h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #dc2626;
+    /* red tone */
+    margin-bottom: 12px;
+}
+
+/* ---------- Error Descriptions ---------- */
+
+.Page404 p,
+.Unauthorized p,
+.Forbidden p {
+    font-size: 16px;
+    color: #4b5563;
+    margin-bottom: 20px;
+}
+
+/* ---------- Action Links ---------- */
+
+.Page404 a,
+.Unauthorized a,
+.Forbidden a {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #2563eb;
+    color: #ffffff;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.Page404 a:hover,
+.Unauthorized a:hover,
+.Forbidden a:hover {
+    background: #1e40af;
+}

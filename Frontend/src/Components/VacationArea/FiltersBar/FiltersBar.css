@@ -1,0 +1,42 @@
+/* ---------- FiltersBar ---------- */
+/* Container layout for filter buttons */
+.FiltersBar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* Base styles for each filter button */
+.FiltersBar button {
+    appearance: none;
+    border: 1px solid #d1d5db; /* gray-300 */
+    background: #fff;
+    color: #111827; /* gray-900 */
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+/* Hover effect */
+.FiltersBar button:hover {
+    background: #f3f4f6; /* slate-100 */
+    border-color: #cbd5e1; /* gray-300 */
+}
+
+/* Press effect on click */
+.FiltersBar button:active {
+    transform: translateY(1px);
+}
+
+/* Active filter state (highlighted) */
+.FiltersBar button.active,
+.FiltersBar button[aria-current="true"] {
+    background: #2563eb;     /* primary blue */
+    color: #fff;
+    border-color: #2563eb;
+}

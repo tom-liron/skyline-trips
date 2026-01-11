@@ -1,0 +1,152 @@
+/* ---------- VacationCard Base ---------- */
+/* Main container layout: grid layout with header, content, and footer zones */
+.VacationCard {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Card hover effect: lift up slightly and soften border */
+.VacationCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+    border-color: #dbe2ea;
+}
+
+/* ---------- Media ---------- */
+/* Image container: enforces aspect ratio and fallback background */
+.VacationCard .media {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+
+/* Make image fully cover the container without distortion */
+.VacationCard .media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ---------- Info ---------- */
+/* Header: aligns title and price horizontally */
+.VacationCard .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 14px 6px;
+}
+
+/* Vacation title: bold and readable */
+.VacationCard .title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: 0.2px;
+}
+
+/* Price styling: highlight in primary color */
+.VacationCard .price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+/* Vacation date range below title */
+.VacationCard .dates {
+    font-size: 13px;
+    color: #6b7280;
+    padding: 0 14px 4px;
+}
+
+/* ---------- Description ---------- */
+/* Short description with fixed height and scroll if overflowed */
+.VacationCard .desc {
+    font-size: 13px;
+    color: #4b5563;
+    padding: 0 14px 12px;
+    line-height: 1.4;
+
+    /* ✅ Ensure all descriptions take the same height for consistent layout */
+    max-height: 90px;
+    min-height: 90px;
+
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /* Firefox */
+}
+
+/* Scrollbar customization for WebKit browsers */
+.VacationCard .desc::-webkit-scrollbar {
+    width: 6px;
+}
+
+.VacationCard .desc::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* ---------- Actions ---------- */
+/* Bottom section: holds Like/Edit/Delete buttons */
+.VacationCard .actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 14px 14px;
+    border-top: 1px solid #eef2f7;
+}
+
+/* ---------- Like Button ---------- */
+/* General appearance of the like button */
+.VacationCard .like-button {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #111827;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+/* Hover effect for like button */
+.VacationCard .like-button:hover {
+    background: #f9fafb;
+    border-color: #cbd5e1;
+}
+
+/* Press effect (click down) */
+.VacationCard .like-button:active {
+    transform: translateY(1px);
+}
+
+/* Default heart icon color */
+.VacationCard .like-button .heart {
+    color: #999;
+}
+
+/* Style when the vacation is liked by the current user */
+.VacationCard .like-button.liked {
+    background: rgba(255, 192, 203, 0.6);
+}
+
+/* Red heart for liked state */
+.VacationCard .like-button.liked .heart {
+    color: red;
+}
+
+/* Gray heart for vacations liked by others (but not me) */
+.VacationCard .like-button.others-liked .heart {
+    color: gray;
+}

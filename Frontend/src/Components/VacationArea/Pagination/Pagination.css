@@ -1,0 +1,102 @@
+/* ---------- Pagination shell ---------- */
+/* Wrapper for the entire pagination component, centered on the page */
+.Pagination {
+    display: flex;
+    justify-content: center;
+    margin: 18px 0 8px;
+}
+
+/* Capsule background around the button group (like a pill container) */
+.Pagination .pager {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 6px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 9999px;
+    /* full rounded (pill shape) */
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .06);
+}
+
+/* ---------- Buttons ---------- */
+/* Base styles for all pagination buttons */
+.Pagination .pager button {
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #374151;
+    /* slate-700 */
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 9999px;
+    padding: 10px 14px;
+    min-width: 40px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.05s ease;
+}
+
+/* Hover state for numbered buttons */
+.Pagination .page-btn:hover {
+    background: #f3f4f6;
+    /* slate-100 */
+}
+
+/* Current/active page button styles */
+.Pagination .page-btn.active,
+.Pagination .page-btn[aria-current="page"] {
+    background: #2563eb;
+    /* primary blue */
+    color: #fff;
+    border-color: #2563eb;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, .25);
+}
+
+/* Arrow buttons (prev/next) — different from numbered buttons */
+.Pagination .arrow {
+    border: 1px solid #d1d5db;
+    /* gray-300 */
+    background: #fff;
+    color: #111827;
+    /* gray-900 */
+    padding: 10px 12px;
+}
+
+/* Hover state for arrows */
+.Pagination .arrow:hover {
+    background: #f9fafb;
+    border-color: #cbd5e1;
+    /* gray-300 → gray-300/200 */
+}
+
+/* Small press-down animation when clicked */
+.Pagination .pager button:active {
+    transform: translateY(1px);
+}
+
+/* Disabled state for arrows (first/last page) */
+.Pagination .pager button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Focus ring for keyboard users (accessible) */
+.Pagination .pager button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px #dbeafe;
+    /* blue-100 */
+    border-color: #93c5fd;
+    /* blue-300 */
+}
+
+/* ---------- Responsive ---------- */
+/* Smaller sizing for compact/mobile screens */
+@media (max-width: 520px) {
+    .Pagination .pager button {
+        padding: 8px 10px;
+        min-width: 36px;
+        font-size: 13px;
+    }
+}

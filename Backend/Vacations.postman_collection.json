@@ -1,0 +1,419 @@
+{
+	"info": {
+		"_postman_id": "0c4fc5b0-ace2-414a-95de-f0d428db7298",
+		"name": "Vacations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46547282",
+		"_collection_link": "https://tomliron-7618235.postman.co/workspace/Tom-Liron's-Workspace~30d15357-5fdc-4c0a-8035-ea8fd83bcdf8/collection/46547282-0c4fc5b0-ace2-414a-95de-f0d428db7298?action=share&source=collection_link&creator=46547282"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"firstName\": \"Emma\", \n\"lastName\": \"Watson\",\n\"email\": \"emma@gmail.com\",\n\"password\": \"u123\", \n\"roleId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const token = pm.response.json();",
+									"pm.collectionVariables.set(\"token\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"lisa@gmail.com\",\n    \"password\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vacations for Users",
+			"item": [
+				{
+					"name": "Get Vacations",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"typeId\": 2,\n        \"size\": \"140 x 100 x 60\",\n        \"color\": \"Mapel\",\n        \"price\": \"60.00\"\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/vacations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Vacation",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"typeId\": 2,\n        \"size\": \"140 x 100 x 60\",\n        \"color\": \"Mapel\",\n        \"price\": \"60.00\"\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/vacations/68aae600da5d2978151be1de",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations",
+								"68aae600da5d2978151be1de"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like Vacation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/vacations/68b5360c4680f693a69c5e39/like",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations",
+								"68b5360c4680f693a69c5e39",
+								"like"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unlike Vacation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4001/api/vacations/68aaf52b14284a833bd3e3a0/like",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations",
+								"68aaf52b14284a833bd3e3a0",
+								"like"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vacations for Admin",
+			"item": [
+				{
+					"name": "Add Vacation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "destination",
+									"value": "Paris",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "have a great vacation in Paris! ",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-09-16",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-09-31",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "870",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tomliron/Downloads/paris.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/vacations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vacation",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "destination",
+									"value": "Rome2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "have a great vacation in Rome! see the Pope!",
+									"type": "text"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-08-27",
+									"type": "text"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-09-31",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "570",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/tomliron/Downloads/roma.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:4001/api/vacations/68aaf52b14284a833bd3e3a0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations",
+								"68aaf52b14284a833bd3e3a0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vacation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4001/api/vacations/68a72eb4d784b3663f0311b7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"vacations",
+								"68a72eb4d784b3663f0311b7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"description": {
+				"content": "",
+				"type": "text/plain"
+			}
+		}
+	]
+}

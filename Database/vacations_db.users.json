@@ -1,0 +1,160 @@
+[{
+  "_id": {
+    "$oid": "68a213c03fff3748aa01a530"
+  },
+  "firstName": "Lisa",
+  "lastName": "Simpson",
+  "email": "lisa@gmail.com",
+  "password": "59b8465dfed2dddbcc3902dc49bfa09376b5fb5e65e14a19b10c43d261de230be3a0d3b4306c0f6a657164e733eb696cad125c024d6fb3446a65337cc69bd056",
+  "roleId": 1,
+  "createdAt": {
+    "$date": "2025-08-17T17:39:12.036Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-17T17:39:12.036Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68aae6d2da5d2978151be1e6"
+  },
+  "firstName": "Marge",
+  "lastName": "Simpson",
+  "email": "marge@gmail.com",
+  "password": "59b8465dfed2dddbcc3902dc49bfa09376b5fb5e65e14a19b10c43d261de230be3a0d3b4306c0f6a657164e733eb696cad125c024d6fb3446a65337cc69bd056",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-08-24T10:17:54.706Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T10:17:54.706Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c8f431f6e2e64bb44331"
+  },
+  "firstName": "Keanu",
+  "lastName": "Reeves",
+  "email": "keanu@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:30:44.157Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:30:44.157Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c91431f6e2e64bb44334"
+  },
+  "firstName": "Taylor",
+  "lastName": "Swift",
+  "email": "taylor@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:31:16.772Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:31:16.772Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c92431f6e2e64bb44337"
+  },
+  "firstName": "Tom",
+  "lastName": "Holland",
+  "email": "tomh@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:31:32.670Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:31:32.670Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c93f31f6e2e64bb4433a"
+  },
+  "firstName": "Gal",
+  "lastName": "Gadot",
+  "email": "gal@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:31:59.287Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:31:59.287Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c95831f6e2e64bb4433d"
+  },
+  "firstName": "Zendaya",
+  "lastName": "Coleman",
+  "email": "zendaya@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:32:24.156Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:32:24.156Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c96531f6e2e64bb44340"
+  },
+  "firstName": "Chris",
+  "lastName": "Evans",
+  "email": "chris@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:32:37.757Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:32:37.757Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9c98531f6e2e64bb44343"
+  },
+  "firstName": "Emma",
+  "lastName": "Watson",
+  "email": "emma@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:33:09.803Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:33:09.803Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68c9cd104d971a6dffa8e571"
+  },
+  "firstName": "Ron",
+  "lastName": "Howard",
+  "email": "ron@gmail.com",
+  "password": "c6a843d5524426c41f326e77600b990a2b8a14a682e48be2e4030a16bff70e594e1ab0782b8b78a0bf7a262eb6482e52cf6f4aaa49851be8c53e7bba808c07ba",
+  "roleId": 2,
+  "createdAt": {
+    "$date": "2025-09-16T20:48:16.553Z"
+  },
+  "updatedAt": {
+    "$date": "2025-09-16T20:48:16.553Z"
+  }
+}]

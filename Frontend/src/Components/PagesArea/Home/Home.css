@@ -1,0 +1,105 @@
+/* Page wrapper */
+.Home {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    background: #000; /* safety underlay for slideshow */
+}
+
+/* Main content (fills remaining height; scrolls past if taller) */
+.home-content {
+    position: relative;
+    z-index: 2;
+    flex: 1; /* ⭐ makes footer sit at bottom when short; scroll when tall */
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 24px;
+    align-items: center;
+    padding: 24px clamp(16px, 6vw, 64px);
+}
+
+/* Footer in normal flow, pushed to bottom when short */
+.page-footer {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    text-align: center;
+    margin-top: auto; /* ⭐ pushes footer down in short pages */
+    padding: 12px 16px; /* comfortable baseline spacing */
+}
+
+
+/* LEFT: Brand block */
+.home-left {
+    display: flex;
+    flex-direction: column; /* stack title + tagline */
+    justify-content: center; /* vertical center inside grid cell */
+    align-items: center; /* horizontal center */
+    text-align: center; /* center the text itself */
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.28);
+    max-width: 680px;
+    margin: 0 auto; /* keep it nicely centered on wide screens */
+}
+
+.brand-title {
+    margin: 0 0 6px;
+    font-weight: 800;
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: 0.2px;
+}
+
+.brand-tagline {
+    margin: 0;
+    opacity: 0.92;
+    font-size: clamp(14px, 1.6vw, 18px);
+}
+
+/* RIGHT: Auth / Welcome column */
+.home-right {
+    display: grid;
+    align-content: center;
+    justify-items: stretch;
+    gap: 12px;
+}
+
+/* Card — identical to Login/Register */
+.auth-card,
+.welcome-card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    padding: 22px 20px; /* same as Login.css */
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 1100px) {
+    .home-content {
+        grid-template-columns: 1fr 380px;
+    }
+}
+
+@media (max-width: 992px) {
+    .home-content {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 16px 16px 24px;
+    }
+
+    .home-left {
+        text-align: center;
+        margin-top: 24px;
+        justify-self: center;
+    }
+
+    .home-right {
+        width: min(94vw, 440px);
+        justify-self: center;
+    }
+}
