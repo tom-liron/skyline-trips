@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm } from "../../../../node_modules/react-hook-form/dist";
 import { useNavigate, useParams } from "react-router-dom";
 import type { VacationModel } from "../../../Models/VacationModel";
 import { vacationService } from "../../../Services/VacationService";

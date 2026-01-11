@@ -1,5 +1,5 @@
 // src/components/AuthArea/Register/Register.tsx
-import { useForm } from "react-hook-form";
+import { useForm } from "../../../../node_modules/react-hook-form/dist";
 import type { UserModel } from "../../../Models/UserModel";
 import { userService } from "../../../Services/UserService";
 import { notify } from "../../../Utils/Notify";

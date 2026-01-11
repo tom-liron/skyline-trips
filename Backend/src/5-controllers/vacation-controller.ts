@@ -1,6 +1,5 @@
 import express, { Request, Response, Router } from "express";
 import { UploadedFile } from "express-fileupload";
-import { fileSaver } from "uploaded-file-saver";
 import { VacationModel } from "../3-models/vacation-model";
 import { StatusCode } from "../3-models/status-code";
 import { vacationService } from "../4-services/vacation-service";
@@ -26,9 +25,6 @@ class VacationController {
         this.router.get("/api/vacations/:_id", securityMiddleware.verifyToken, this.getOneVacation);
         this.router.post("/api/vacations/:_id/like", securityMiddleware.verifyToken, preventAdminLike, this.likeVacation);
         this.router.delete("/api/vacations/:_id/like", securityMiddleware.verifyToken, preventAdminLike, this.unlikeVacation);
-
-        // Public route for serving vacation images by filename
-        this.router.get("/api/vacations/images/:imageName", this.getImage);
 
         // Admin routes
         this.router.post("/api/vacations", securityMiddleware.verifyToken, securityMiddleware.verifyAdmin, securityMiddleware.preventXssAttack, this.addVacation);
@@ -97,13 +93,6 @@ class VacationController {
     private async unlikeVacation(request: Request, response: Response) {
         const v = await vacationService.unlikeVacation(request.params._id, response.locals.user._id);
         response.json(serializeVacation(v, response.locals.user._id));
-    }
-
-    // Serve an image file for a vacation
-    private async getImage(request: Request, response: Response) {
-        const imageName = request.params.imageName;
-        const imagePath = fileSaver.getFilePath(imageName);
-        response.sendFile(imagePath);
     }
 
     // Generate and return a CSV report of vacations (admin only)

@@ -3,6 +3,9 @@
 .env.*
 *.local
 
+# Allow env example files
+!.env.example
+
 # Dependencies
 node_modules
 

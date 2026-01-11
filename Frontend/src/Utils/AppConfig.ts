@@ -1,11 +1,15 @@
 /**
  * Frontend configuration utility for API endpoints and UI defaults.
- * Centralizes URLs for authentication, vacations, images, and reports.
- * Use the exported `appConfig` singleton throughout the frontend for consistent references.
+ * Centralizes URLs for authentication, vacations, and admin reports.
+ *
+ * Notes:
+ * - Vacation images are hosted on Cloudinary.
+ * - The frontend renders images directly using `vacation.imageUrl`.
+ * - No backend image endpoints are used.
  *
  * Example usage:
  *   fetch(appConfig.vacationsUrl)
- *   <img src={appConfig.vacationsImagesUrl + imageName} />
+ *   <img src={vacation.imageUrl} />
  */
 
 class AppConfig {
@@ -16,10 +20,7 @@ class AppConfig {
     public readonly loginUrl = `${this.apiUrl}/api/login`;
 
     // Vacations:
-    public readonly vacationsUrl = `${this.apiUrl}/api/vacations`;
-
-    // Images (TEMP – will be removed when Cloudinary is added):
-    public readonly vacationsImagesUrl = `${this.apiUrl}/api/vacations/images/`;
+    public readonly vacationsUrl = `${this.apiUrl}/api/vacations/`;
 
     // Reports (admin):
     public readonly vacationsReportCsvUrl = `${this.apiUrl}/api/vacations/report/csv`;

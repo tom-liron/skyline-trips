@@ -1,8 +1,8 @@
+import { cloudinary } from "../2-utils/cloudinary";
 import { ObjectId } from "mongoose";
 import { UploadedFile } from "express-fileupload";
 import { VacationModel, IVacationModel } from "../3-models/vacation-model";
 import { ResourceNotFound, ValidationError } from "../3-models/client-errors";
-import { fileSaver } from "uploaded-file-saver";
 import { FilterType } from "../2-utils/filter";
 import { buildVacationQuery } from "../2-utils/filter-query";
 
@@ -18,184 +18,179 @@ import { buildVacationQuery } from "../2-utils/filter-query";
  */
 
 class VacationService {
+  /**
+   * Retrieves vacations with filtering and pagination.
+   * @param filter - Filter type ("all", "liked", "active", "upcoming")
+   * @param userId - Current user's ObjectId (for "liked" filter)
+   * @param page - Page number (1-based)
+   * @param pageSize - Number of items per page
+   * @returns Object with vacations array and totalCount for pagination
+   */
+  public async getVacations(
+    filter: FilterType,
+    userId: ObjectId | null,
+    page: number,
+    pageSize: number
+  ): Promise<{ vacations: IVacationModel[]; totalCount: number }> {
+    const query = buildVacationQuery(filter, userId);
 
-    /**
-     * Retrieves vacations with filtering and pagination.
-     * @param filter - Filter type ("all", "liked", "active", "upcoming")
-     * @param userId - Current user's ObjectId (for "liked" filter)
-     * @param page - Page number (1-based)
-     * @param pageSize - Number of items per page
-     * @returns Object with vacations array and totalCount for pagination
-     */
-    public async getVacations(
-        filter: FilterType,
-        userId: ObjectId | null,
-        page: number,
-        pageSize: number
-    ): Promise<{ vacations: IVacationModel[], totalCount: number }> {
+    const totalCount = await VacationModel.countDocuments(query).exec();
 
-        const query = buildVacationQuery(filter, userId);
+    const vacations = await VacationModel.find(query)
+      .sort({ startDate: 1 }) // ascending startDate
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .exec();
 
-        const totalCount = await VacationModel.countDocuments(query).exec();
+    return { vacations, totalCount };
+  }
 
-        const vacations = await VacationModel.find(query)
-            .sort({ startDate: 1 }) // ascending startDate
-            .skip((page - 1) * pageSize)
-            .limit(pageSize)
-            .exec();
+  /**
+   * Retrieves a single vacation by id.
+   */
+  public async getOneVacation(_id: string | ObjectId): Promise<IVacationModel> {
+    const vacation = await VacationModel.findById(_id).exec();
+    if (!vacation) throw new ResourceNotFound(_id);
+    return vacation;
+  }
 
-        return { vacations, totalCount };
+  /**
+   * Adds a new vacation, validates input, and handles image upload.
+   */
+  public async addVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
+    // Validate schema with Mongoose:
+    ValidationError.validate(vacation);
+
+    // Custom date validation
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const start = new Date(vacation.startDate);
+    start.setHours(0, 0, 0, 0);
+
+    if (start < today) {
+      throw new ValidationError("Start date cannot be in the past.");
     }
 
-    /**
-     * Retrieves a single vacation by id.
-     */
-    public async getOneVacation(_id: string | ObjectId): Promise<IVacationModel> {
-        const vacation = await VacationModel.findById(_id).exec();
-        if (!vacation) throw new ResourceNotFound(_id);
-        return vacation;
+    if (vacation.endDate < vacation.startDate) {
+      throw new ValidationError("End date must be after start date.");
     }
 
-    /**
-     * Adds a new vacation, validates input, and handles image upload.
-     */
-    public async addVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
-        // Validate schema with Mongoose:
-        ValidationError.validate(vacation);
-
-        // Custom date validation
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const start = new Date(vacation.startDate);
-        start.setHours(0, 0, 0, 0);
-
-        if (start < today) {
-            throw new ValidationError("Start date cannot be in the past.");
-        }
-
-        if (vacation.endDate < vacation.startDate) {
-            throw new ValidationError("End date must be after start date.");
-        }
-
-        // If image provided, save and assign name
-        if (image) vacation.imageName = await fileSaver.add(image);
-
-        return vacation.save();
+    // If image provided, save and assign name
+    if (!image) {
+      throw new ValidationError("Image is required.");
     }
 
-    /**
-     * Updates an existing vacation, validates input, and handles image update.
-     * Only allowed fields are updated; likedUserIds remain unchanged.
-     */
-    public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
+    vacation.imageUrl = await this.uploadImageToCloudinary(image);
 
-        ValidationError.validate(vacation);
+    return vacation.save();
+  }
 
-        // Custom date validation (allow past start dates when updating)
-        if (vacation.endDate < vacation.startDate) {
-            throw new ValidationError("End date must be after start date.");
-        }
+  /**
+   * Updates an existing vacation, validates input, and handles image update.
+   * Only allowed fields are updated; likedUserIds remain unchanged.
+   */
+  public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
+    // 1. Load existing vacation from DB
+    const existingVacation = await VacationModel.findById(vacation._id).exec();
+    if (!existingVacation) throw new ResourceNotFound(vacation._id);
 
-        // If there's a new image, update it
-        if (image) {
-            const oldImageName = await this.getImageName(vacation._id);
-            vacation.imageName = await fileSaver.update(oldImageName!, image);
-        }
+    // 2. Apply updated scalar fields
+    existingVacation.destination = vacation.destination;
+    existingVacation.description = vacation.description;
+    existingVacation.startDate = vacation.startDate;
+    existingVacation.endDate = vacation.endDate;
+    existingVacation.price = vacation.price;
 
-        // Convert Mongoose document to plain object and exclude likedUserIds
-        const { likedUserIds, ...updateData } = vacation.toObject();
-
-        // Update only allowed fields, keep likedUserIds intact
-        const dbVacation = await VacationModel.findByIdAndUpdate(
-            vacation._id,
-            { $set: updateData },
-            { new: true } // return the updated document
-        ).exec();
-
-        if (!dbVacation) throw new ResourceNotFound(vacation._id);
-
-        return dbVacation;
+    // 3. Replace image ONLY if new image provided
+    if (image) {
+      existingVacation.imageUrl = await this.uploadImageToCloudinary(image);
     }
 
-    /**
-     * Deletes a vacation and its associated image.
-     */
-    public async deleteVacation(_id: string | ObjectId): Promise<void> {
-        const oldImageName = await this.getImageName(_id);
+    // 4. Validate FULL, FINAL document
+    ValidationError.validate(existingVacation);
 
-        const dbVacation = await VacationModel.findByIdAndDelete(_id, { returnOriginal: false }).exec();
-        if (!dbVacation) throw new ResourceNotFound(_id);
-
-        if (oldImageName) await fileSaver.delete(oldImageName);
+    if (existingVacation.endDate < existingVacation.startDate) {
+      throw new ValidationError("End date must be after start date.");
     }
 
-    /**
-     * Adds the user's id to the likedUserIds array for a vacation.
-     * @returns Updated vacation document
-     */
-    public async likeVacation(vacationId: string | ObjectId, userId: ObjectId): Promise<IVacationModel> {
+    // 5. Save
+    return existingVacation.save();
+  }
 
-        const vacation = await VacationModel.findByIdAndUpdate(
-            vacationId,
-            { $addToSet: { likedUserIds: userId } },
-            { returnOriginal: false }
-        ).exec();
-        if (!vacation) throw new ResourceNotFound(vacationId);
-        return vacation;
-    }
+  /**
+   * Deletes a vacation and its associated image.
+   */
+  public async deleteVacation(_id: string | ObjectId): Promise<void> {
+    const dbVacation = await VacationModel.findByIdAndDelete(_id).exec();
+    if (!dbVacation) throw new ResourceNotFound(_id);
+  }
 
-    /**
-     * Removes the user's id from the likedUserIds array for a vacation.
-     * @returns Updated vacation document
-     */
-    public async unlikeVacation(vacationId: string | ObjectId, userId: ObjectId): Promise<IVacationModel> {
-        const vacation = await VacationModel.findByIdAndUpdate(
-            vacationId,
-            { $pull: { likedUserIds: userId } },
-            { returnOriginal: false }
-        ).exec();
-        if (!vacation) throw new ResourceNotFound(vacationId);
-        return vacation;
-    }
+  /**
+   * Adds the user's id to the likedUserIds array for a vacation.
+   * @returns Updated vacation document
+   */
+  public async likeVacation(vacationId: string | ObjectId, userId: ObjectId): Promise<IVacationModel> {
+    const vacation = await VacationModel.findByIdAndUpdate(
+      vacationId,
+      { $addToSet: { likedUserIds: userId } },
+      { returnOriginal: false }
+    ).exec();
+    if (!vacation) throw new ResourceNotFound(vacationId);
+    return vacation;
+  }
 
-    /**
-     * Helper to fetch the current image name for a vacation.
-     */
-    private async getImageName(_id: string | ObjectId): Promise<string> {
-        const vacation = await this.getOneVacation(_id);
-        return vacation?.imageName;
-    }
+  /**
+   * Removes the user's id from the likedUserIds array for a vacation.
+   * @returns Updated vacation document
+   */
+  public async unlikeVacation(vacationId: string | ObjectId, userId: ObjectId): Promise<IVacationModel> {
+    const vacation = await VacationModel.findByIdAndUpdate(
+      vacationId,
+      { $pull: { likedUserIds: userId } },
+      { returnOriginal: false }
+    ).exec();
+    if (!vacation) throw new ResourceNotFound(vacationId);
+    return vacation;
+  }
 
-    /**
-     * Generates a CSV report of all vacations and their like counts.
-     * @returns CSV string (with BOM for Excel)
-     */
-    public async generateVacationsReportCSV(): Promise<string> {
-        const vacations = await VacationModel.find().select("destination likedUserIds").exec();
+  private async uploadImageToCloudinary(image: UploadedFile): Promise<string> {
+    const result = await cloudinary.uploader.upload(image.tempFilePath, {
+      folder: "skyline-trips/vacations",
+      resource_type: "image",
+    });
 
-        const header = "destination,likes";
+    return result.secure_url;
+  }
 
-        const rows = vacations.map(v => {
-            const destination = `"${String(v.destination).replace(/"/g, '""')}"`; // escape quotes
-            const likes = v.likedUserIds.length;
-            return `${destination},${likes}`;
-        });
+  /**
+   * Generates a CSV report of all vacations and their like counts.
+   * @returns CSV string (with BOM for Excel)
+   */
+  public async generateVacationsReportCSV(): Promise<string> {
+    const vacations = await VacationModel.find().select("destination likedUserIds").exec();
 
-        const csv = [header, ...rows].join("\n");
+    const header = "destination,likes";
 
-        return "\uFEFF" + csv; // prepend BOM for Excel
-    }
+    const rows = vacations.map((v) => {
+      const destination = `"${String(v.destination).replace(/"/g, '""')}"`; // escape quotes
+      const likes = v.likedUserIds.length;
+      return `${destination},${likes}`;
+    });
 
-    /**
-     * Returns a report of all vacations and their like counts as an array of objects.
-     * @returns Array of { destination, likes }
-     */
-    public async getVacationsReport(): Promise<{ destination: string; likes: number }[]> {
-        const vacations = await VacationModel.find().select("destination likedUserIds").exec();
-        return vacations.map(v => ({ destination: v.destination, likes: v.likedUserIds.length }));
-    }
+    const csv = [header, ...rows].join("\n");
 
+    return "\uFEFF" + csv; // prepend BOM for Excel
+  }
+
+  /**
+   * Returns a report of all vacations and their like counts as an array of objects.
+   * @returns Array of { destination, likes }
+   */
+  public async getVacationsReport(): Promise<{ destination: string; likes: number }[]> {
+    const vacations = await VacationModel.find().select("destination likedUserIds").exec();
+    return vacations.map((v) => ({ destination: v.destination, likes: v.likedUserIds.length }));
+  }
 }
 
 export const vacationService = new VacationService();

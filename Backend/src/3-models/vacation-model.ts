@@ -1,25 +1,32 @@
 import { Document, model, ObjectId, Schema } from "mongoose";
-import { appConfig } from "../2-utils/app-config";
 
 /**
  * Defines the Mongoose schema and TypeScript interface for vacation entities.
- * Used for CRUD operations on vacations, including validation and serialization.
- * Supports virtual fields (e.g., imageUrl) and tracks which users liked each vacation.
+ *
+ * Used for:
+ * - CRUD operations on vacations
+ * - Schema-level validation
+ * - Tracking which users liked each vacation
+ *
+ * Image handling:
+ * - Each vacation stores a direct `imageUrl` pointing to a Cloudinary-hosted image
+ * - No local file names, paths, or virtual image fields are used
+ * - The backend does not serve image files; the frontend renders images directly from the URL
  *
  * Example usage:
  *   const vacation = await VacationModel.findById(id);
- *   vacation.imageUrl // computed from imageName and baseImageUrl
+ *   vacation.imageUrl // Cloudinary HTTPS URL
  */
 
 export interface IVacationModel extends Document {
-    _id: ObjectId;
-    destination: string;
-    description: string;
-    startDate: Date;    
-    endDate: Date;      
-    price: number;
-    imageName: string;
-    likedUserIds: ObjectId[];
+  _id: ObjectId;
+  destination: string;
+  description: string;
+  startDate: Date;
+  endDate: Date;
+  price: number;
+  imageUrl: string;
+  likedUserIds: ObjectId[];
 }
 
 export const VacationSchema = new Schema<IVacationModel>(
@@ -50,8 +57,9 @@ export const VacationSchema = new Schema<IVacationModel>(
       min: [0, "Price can't be negative."],
       max: [10000, "Price can't exceed 10000."],
     },
-    imageName: {
+    imageUrl: {
       type: String,
+      required: true,
       trim: true,
     },
     likedUserIds: {
@@ -62,20 +70,8 @@ export const VacationSchema = new Schema<IVacationModel>(
   },
   {
     versionKey: false,
-    toJSON: { virtuals: true },
-    id: false,
     timestamps: true,
   }
 );
 
-VacationSchema.virtual("imageUrl").get(function () {
-  return appConfig.baseImageUrl + this.imageName;   
-  // example : this.imageName = 3f9c2a4a-paris.jpg then we return-
-  // "http://localhost:4001/api/vacations/images/3f9c2a4a-paris.jpg" 
-});
-
-export const VacationModel = model<IVacationModel>(
-  "VacationModel",
-  VacationSchema,
-  "vacations"
-);
+export const VacationModel = model<IVacationModel>("VacationModel", VacationSchema, "vacations");
