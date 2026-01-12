@@ -3,6 +3,7 @@ import { userService } from "../services/user-service";
 import { UserModel } from "../models/user-model";
 import { StatusCode } from "../models/status-code";
 import { credentialsModel } from "../models/credentials-model";
+import { securityMiddleware } from "../middleware/security-middleware";
 
 /**
  * Express controller for user registration and authentication endpoints.
@@ -20,8 +21,8 @@ class UserController {
 
   // Register routes:
   public constructor() {
-    this.router.post("/api/register", this.register);
-    this.router.post("/api/login", this.login);
+    this.router.post("/api/register", securityMiddleware.preventXssAttack, this.register);
+    this.router.post("/api/login", securityMiddleware.preventXssAttack, this.login);
   }
 
   // Register a new user:

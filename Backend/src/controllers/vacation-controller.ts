@@ -35,14 +35,13 @@ class VacationController {
       "/api/vacations",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      securityMiddleware.preventXssAttack,
       this.addVacation
     );
+
     this.router.patch(
       "/api/vacations/:_id",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      securityMiddleware.preventXssAttack,
       this.updateVacation
     );
     this.router.delete(

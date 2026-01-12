@@ -60,9 +60,6 @@ class VacationService {
    * Adds a new vacation, validates input, and handles image upload.
    */
   public async addVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
-    // Validate schema with Mongoose:
-    ValidationError.validate(vacation);
-
     // Custom date validation
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -78,12 +75,15 @@ class VacationService {
       throw new ValidationError("End date must be after start date.");
     }
 
-    // If image provided, save and assign name
     if (!image) {
       throw new ValidationError("Image is required.");
     }
 
+    // ✅ Populate required field BEFORE validation
     vacation.imageUrl = await this.uploadImageToCloudinary(image);
+
+    // ✅ NOW validate full document
+    ValidationError.validate(vacation);
 
     return vacation.save();
   }

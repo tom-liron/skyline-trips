@@ -24,31 +24,48 @@ export function AddVacation() {
     const navigate = useNavigate();
 
     async function send(vacation: VacationModel) {
-        const start = new Date(vacation.startDate);
-        const end = new Date(vacation.endDate);
+        const start = new Date(vacation.startDate as string);
+        const end = new Date(vacation.endDate as string);
+
+        const today = new Date();
+        const startOnly = new Date(start.toDateString());
+        const todayOnly = new Date(today.toDateString());
+
+        if (startOnly < todayOnly) {
+            notify.error("Start date cannot be in the past.");
+            return;
+        }
 
         if (end < start) {
             notify.error("End date cannot be earlier than start date.");
             return;
         }
 
+        const files = vacation.image as unknown as FileList;
+
+        if (!files || files.length === 0) {
+            notify.error("Image is required.");
+            return;
+        }
+
         try {
-            const file = (vacation.image as unknown as FileList)?.[0] as File; // required
             await vacationService.addVacation({
                 destination: vacation.destination,
                 description: vacation.description,
                 startDate: vacation.startDate,
                 endDate: vacation.endDate,
                 price: Number(vacation.price),
-                image: file
+                image: files[0]
             });
+
             notify.success("Vacation has been added.");
             navigate(routes.adminVacations);
-        }
-        catch {
+        } catch {
             notify.error("Failed to add vacation. Please check the form and try again.");
         }
     }
+
+
 
     return (
         <div className="AddVacation">
