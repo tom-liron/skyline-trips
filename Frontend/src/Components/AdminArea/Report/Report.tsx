@@ -48,8 +48,8 @@ export function Report() {
                 setLoading(true);
                 const data = await vacationService.getReportJSON();
                 setRows(data);
-            } catch (err: any) {
-                notify.error(err.message);
+            } catch {
+                notify.error("Failed to load report data.");
             } finally {
                 setLoading(false);
             }

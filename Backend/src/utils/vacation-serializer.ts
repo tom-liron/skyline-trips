@@ -1,4 +1,4 @@
-import { IVacationModel } from "../3-models/vacation-model";
+import { IVacationModel } from "../models/vacation-model";
 
 /**
  * Utility functions for serializing vacation documents for API responses.
@@ -18,24 +18,22 @@ import { IVacationModel } from "../3-models/vacation-model";
  * @returns Serialized vacation object for API response.
  */
 export function serializeVacation(vacation: IVacationModel, userId: any) {
-    // Convert Mongoose document to plain JS object, including virtuals
-    const vacationObj = vacation.toObject({ virtuals: true });
+  // Convert Mongoose document to plain JS object, including virtuals
+  const vacationObj = vacation.toObject({ virtuals: true });
 
-    // Determine if the current user liked this vacation
-    const likedByMe = vacationObj.likedUserIds?.some(
-        (id: any) => id.toString() === userId.toString()
-    );
-    // Count total likes
-    const likesCount = vacationObj.likedUserIds?.length ?? 0;
+  // Determine if the current user liked this vacation
+  const likedByMe = vacationObj.likedUserIds?.some((id: any) => id.toString() === userId.toString());
+  // Count total likes
+  const likesCount = vacationObj.likedUserIds?.length ?? 0;
 
-    // Always return id as string for frontend
-    const _id = vacationObj._id.toString();
+  // Always return id as string for frontend
+  const _id = vacationObj._id.toString();
 
-    // Remove internal likedUserIds array from the response
-    delete vacationObj.likedUserIds;
+  // Remove internal likedUserIds array from the response
+  delete vacationObj.likedUserIds;
 
-    // Return the serialized vacation object with computed fields
-    return { ...vacationObj, _id, likedByMe, likesCount };
+  // Return the serialized vacation object with computed fields
+  return { ...vacationObj, _id, likedByMe, likesCount };
 }
 
 /**
@@ -45,5 +43,5 @@ export function serializeVacation(vacation: IVacationModel, userId: any) {
  * @returns Array of serialized vacation objects.
  */
 export function serializeVacations(vacations: IVacationModel[], userId: any) {
-    return vacations.map(v => serializeVacation(v, userId));
+  return vacations.map((v) => serializeVacation(v, userId));
 }

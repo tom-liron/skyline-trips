@@ -76,9 +76,9 @@ export function VacationsListUser() {
                 totalCount: serverMeta.totalCount
             });
 
-        } catch (err: any) {
-            notify.error(err.message); // Show error message
-            setPagination(prev => ({ ...prev, totalPages: 1, totalCount: 0 })); // Reset fallback
+        } catch {
+            notify.error("Failed to load vacations.");
+            setPagination(prev => ({ ...prev, totalPages: 1, totalCount: 0 }));
         } finally {
             setIsLoading(false); // Stop spinner
         }
@@ -105,8 +105,8 @@ export function VacationsListUser() {
     async function handleLikeToggle(vacationId: string) {
         try {
             await vacationService.toggleLike(vacationId); // Server confirms
-        } catch (err: any) {
-            notify.error(err.message); // Show error if failed
+        } catch {
+            notify.error("Failed to update like. Please try again.");
         }
     }
 

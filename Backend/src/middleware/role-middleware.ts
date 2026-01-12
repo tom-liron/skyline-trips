@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { ForbiddenError } from "../3-models/client-errors";
-import { Role } from "../3-models/role";
+import { ForbiddenError } from "../models/client-errors";
+import { Role } from "../models/role";
 
 /**
  * Express middleware for role-based access control.
@@ -18,8 +18,8 @@ import { Role } from "../3-models/role";
  */
 
 export function preventAdminLike(request: Request, response: Response, next: NextFunction) {
-    if (response.locals.user.roleId === Role.Admin) {
-        return next(new ForbiddenError("Admin cannot like vacations."));
-    }
-    next();
+  if (response.locals.user.roleId === Role.Admin) {
+    return next(new ForbiddenError("Admin cannot like vacations."));
+  }
+  next();
 }

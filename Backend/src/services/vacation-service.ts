@@ -1,20 +1,22 @@
-import { cloudinary } from "../2-utils/cloudinary";
+import { cloudinary } from "../utils/cloudinary";
 import { ObjectId } from "mongoose";
 import { UploadedFile } from "express-fileupload";
-import { VacationModel, IVacationModel } from "../3-models/vacation-model";
-import { ResourceNotFound, ValidationError } from "../3-models/client-errors";
-import { FilterType } from "../2-utils/filter";
-import { buildVacationQuery } from "../2-utils/filter-query";
+import { VacationModel, IVacationModel } from "../models/vacation-model";
+import { ResourceNotFound, ValidationError } from "../models/client-errors";
+import { FilterType } from "../utils/filter";
+import { buildVacationQuery } from "../utils/filter-query";
 
 /**
- * Service for vacation CRUD operations, image handling, likes, and reporting.
- * Handles filtering, pagination, validation, and file management for vacation entities.
- * Used by controllers to manage vacation data and business logic.
+ * Service layer for vacation-related business logic.
  *
- * Example usage:
- *   const { vacations, totalCount } = await vacationService.getVacations(filter, userId, page, pageSize);
- *   const vacation = await vacationService.addVacation(vacation, image);
- *   await vacationService.deleteVacation(id);
+ * Responsibilities:
+ * - Fetching vacations with filtering and pagination
+ * - Validating vacation data
+ * - Uploading images to Cloudinary
+ * - Managing likes and admin reports
+ *
+ * This service contains domain logic only
+ * and is independent of HTTP or Express concerns.
  */
 
 class VacationService {

@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { shuffle, preloadImages } from "../../../Utils/Slideshow";
+
 import "./BackgroundSlideshow.css";
 
 /*
@@ -27,22 +29,6 @@ const DEFAULT_IMAGES = [
     "/images/home/tokyo.png",
 ] as const;
 
-function shuffle<T>(arr: readonly T[]): T[] {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function preloadImages(paths: readonly string[]) {
-    paths.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-    });
-}
-
 type BackgroundSlideshowProps = {
     images?: readonly string[];
     intervalMs?: number; // default 8000
@@ -69,7 +55,6 @@ export function BackgroundSlideshow({
                 <img
                     key={src}
                     src={src}
-                    alt=""
                     className={`bg-slide ${i === index ? "active" : ""}`}
                     loading="eager"
                 />

@@ -1,4 +1,4 @@
-import { useForm } from "../../../../node_modules/react-hook-form/dist";
+import { useForm } from "react-hook-form";
 import type { UserModel } from "../../../Models/UserModel";
 import { userService } from "../../../Services/UserService";
 import { notify } from "../../../Utils/Notify";
@@ -62,12 +62,8 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
             notify.success(`Welcome back ${userInStore?.firstName}!`);
 
             navigate(roleId === Role.Admin ? routes.adminVacations : routes.vacations);
-        } catch (err: any) {
-            console.log("FULL ERROR OBJECT:", err);
-            console.log("RESPONSE:", err?.response);
-            console.log("MESSAGE:", err?.message);
-
-            notify.error(err?.response?.data?.message || "Fallback: You must be logged in.");
+        } catch (err) {
+            notify.error((err as Error).message);
         }
     }
 

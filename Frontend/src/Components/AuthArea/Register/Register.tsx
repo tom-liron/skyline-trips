@@ -1,5 +1,5 @@
 // src/components/AuthArea/Register/Register.tsx
-import { useForm } from "../../../../node_modules/react-hook-form/dist";
+import { useForm } from "react-hook-form";
 import type { UserModel } from "../../../Models/UserModel";
 import { userService } from "../../../Services/UserService";
 import { notify } from "../../../Utils/Notify";
@@ -43,8 +43,8 @@ export function Register({ withFooter = true }: Props) {
             notify.success(`Dear ${user.firstName} ${user.lastName}<br/>Welcome to Skyline Trips!`);
 
             navigate(roleId === Role.Admin ? routes.adminVacations : routes.vacations);
-        } catch (err: any) {
-            notify.error(err?.response?.data?.message || "Registration failed.");
+        } catch (err) {
+            notify.error((err as Error).message);
         }
     }
 

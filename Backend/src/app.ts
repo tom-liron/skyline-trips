@@ -1,10 +1,10 @@
 import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
-import { appConfig } from "./2-utils/app-config";
-import { errorMiddleware } from "./6-middleware/error-middleware";
-import { userController } from "./5-controllers/user-controller";
-import { vacationController } from "./5-controllers/vacation-controller";
+import { appConfig } from "./utils/app-config";
+import { errorMiddleware } from "./middleware/error-middleware";
+import { userController } from "./controllers/user-controller";
+import { vacationController } from "./controllers/vacation-controller";
 import fileUpload from "express-fileupload";
 
 /**

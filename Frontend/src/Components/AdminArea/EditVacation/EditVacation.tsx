@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm } from "../../../../node_modules/react-hook-form/dist";
+import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import type { VacationModel } from "../../../Models/VacationModel";
 import { vacationService } from "../../../Services/VacationService";
@@ -38,10 +38,20 @@ export function EditVacation() {
                 setValue("price", vacation.price);
                 setImageUrl(vacation.imageUrl || "");
             })
-            .catch(err => notify.error(err));
+            .catch(() => {
+                notify.error("Failed to load vacation details.")
+            });
     }, [_id, setValue]);
 
     async function send(vacation: VacationModel) {
+        const start = new Date(vacation.startDate);
+        const end = new Date(vacation.endDate);
+
+        if (end < start) {
+            notify.error("End date cannot be earlier than start date.");
+            return;
+        }
+
         try {
             const file = (vacation.image as unknown as FileList)?.[0] as File | undefined;
             await vacationService.updateVacation(_id, {
@@ -55,7 +65,10 @@ export function EditVacation() {
             notify.success("Vacation has been updated.");
             navigate(routes.adminVacations);
         }
-        catch (err: any) { notify.error(err); }
+        catch {
+            notify.error("Failed to update vacation. Please check the form and try again.");
+        }
+
     }
 
     return (

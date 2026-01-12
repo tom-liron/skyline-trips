@@ -19,74 +19,78 @@ import { routes } from "../Utils/Routes";
  */
 
 class UserService {
+  public constructor() {
+    // Get token from local storage:
+    const token = localStorage.getItem("token");
 
-
-    public constructor() {
-        // Get token from local storage:
-        const token = localStorage.getItem("token");
-
-        // If we have a token:
-        if (token) {
-            try {
-                // Extract user from token:
-                const dbUser = jwtDecode<{ user: UserModel }>(token).user;
-
-                // Send to global state:
-                store.dispatch(userSlice.actions.initUser(dbUser));
-            } catch (err) {
-                // Invalid/malformed token in storage → purge it and continue as guest
-                console.warn("Invalid JWT in localStorage; clearing token.", err);
-                localStorage.removeItem("token");
-            }
-        }
-    }
-
-    // Register a new user:
-    public async register(user: UserModel): Promise<void> {
-
-        // Send user to backend:
-        const response = await axios.post<string>(appConfig.registerUrl, user);
-
-        // Extract token: 
-        const token: string = response.data;
-
-        // Extract user from token: 
+    // If we have a token:
+    if (token) {
+      try {
+        // Extract user from token:
         const dbUser = jwtDecode<{ user: UserModel }>(token).user;
 
-        // Send to global state: 
+        // Send to global state:
         store.dispatch(userSlice.actions.initUser(dbUser));
-
-        // Save token in local storage: 
-        localStorage.setItem("token", token);
+      } catch (err) {
+        // Invalid/malformed token in storage → purge it and continue as guest
+        console.warn("Invalid JWT in localStorage; clearing token.", err);
+        localStorage.removeItem("token");
+      }
     }
+  }
 
-    // Login as existing user:
-    public async login(credentials: CredentialsModel): Promise<void> {
+  // Register a new user:
+  public async register(user: UserModel): Promise<void> {
+    try {
+      // Send user to backend:
+      const response = await axios.post<string>(appConfig.registerUrl, user);
 
-        // Send user to backend:
-        const response = await axios.post<string>(appConfig.loginUrl, credentials);
+      // Extract token:
+      const token: string = response.data;
 
-        // Extract token: 
-        const token: string = response.data;
+      // Extract user from token:
+      const dbUser = jwtDecode<{ user: UserModel }>(token).user;
 
-        // Extract user from token: 
-        const dbUser = jwtDecode<{ user: UserModel }>(token).user;
+      // Send to global state:
+      store.dispatch(userSlice.actions.initUser(dbUser));
 
-        // Send to global state: 
-        store.dispatch(userSlice.actions.initUser(dbUser));
-
-        // Save token in local storage: 
-        localStorage.setItem("token", token);
+      // Save token in local storage:
+      localStorage.setItem("token", token);
+    } catch {
+      throw new Error("Registration failed. Please try again.");
     }
+  }
 
-    // Logout: 
-    public logout(): void {
+  // Login as existing user:
+  public async login(credentials: CredentialsModel): Promise<void> {
+    try {
+      // Send user to backend:
+      const response = await axios.post<string>(appConfig.loginUrl, credentials);
+
+      // Extract token:
+      const token: string = response.data;
+
+      // Extract user from token:
+      const dbUser = jwtDecode<{ user: UserModel }>(token).user;
+
+      // Send to global state:
+      store.dispatch(userSlice.actions.initUser(dbUser));
+
+      // Save token in local storage:
+      localStorage.setItem("token", token);
+    } catch {
+      throw new Error("Login failed. Please try again.");
+    }
+  }
+
+  // Logout:
+  public logout(): void {
     store.dispatch(userSlice.actions.logoutUser());
     localStorage.removeItem("token");
 
     // Navigate to home (non-protected page)
     window.location.href = routes.home; // hard redirect = no race condition
-}
+  }
 }
 
 export const userService = new UserService();

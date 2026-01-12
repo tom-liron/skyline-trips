@@ -73,10 +73,8 @@ export function VacationListAdmin() {
                 totalCount: serverMeta.totalCount,
             });
 
-        } catch (err: any) {
-            notify.error(err?.message || "Failed to load vacations.");
-
-            // Reset pagination on error
+        } catch {
+            notify.error("Failed to load vacations.");
             setPagination(prev => ({ ...prev, totalPages: 1, totalCount: 0 }));
         } finally {
             setIsLoading(false);
@@ -108,8 +106,8 @@ export function VacationListAdmin() {
             await vacationService.deleteVacation(vacationId); // Server + Redux update
             notify.success("Vacation has been deleted.");
             await load(currentPage); // Refresh page in case last item was deleted
-        } catch (err: any) {
-            notify.error(err?.message || "Failed to delete vacation.");
+        } catch {
+            notify.error("Failed to delete vacation.");
         }
     }
 
