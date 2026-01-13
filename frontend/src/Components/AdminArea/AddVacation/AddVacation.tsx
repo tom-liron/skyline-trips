@@ -7,6 +7,7 @@ import { useTitle } from "../../../Utils/UseTitle";
 import { routes } from "../../../Utils/Routes";
 import "./AddVacation.css";
 import { useAdminGuard } from "../../../Utils/UseAdminGuard";
+import { useState } from "react";
 
 /**
  * Allows admin users to add a new vacation.
@@ -23,7 +24,13 @@ export function AddVacation() {
     const { register, handleSubmit } = useForm<VacationModel>();
     const navigate = useNavigate();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     async function send(vacation: VacationModel) {
+
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         const start = new Date(vacation.startDate as string);
         const end = new Date(vacation.endDate as string);
 
@@ -65,8 +72,6 @@ export function AddVacation() {
         }
     }
 
-
-
     return (
         <div className="AddVacation">
             <form onSubmit={handleSubmit(send)}>
@@ -91,7 +96,10 @@ export function AddVacation() {
                 <label>Image:</label>
                 <input type="file" accept="image/*" {...register("image")} required />
 
-                <button>Add</button>
+                <button disabled={isSubmitting}>
+                    {isSubmitting ? "Adding..." : "Add"}
+                </button>
+
             </form>
         </div>
     );

@@ -22,6 +22,12 @@ export function EditVacation() {
     useAdminGuard();
     useTitle("Edit Vacation");
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
     const [imageUrl, setImageUrl] = useState<string>("");
     const { register, handleSubmit, setValue } = useForm<VacationModel>();
     const navigate = useNavigate();
@@ -44,6 +50,10 @@ export function EditVacation() {
     }, [_id, setValue]);
 
     async function send(vacation: VacationModel) {
+
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
         const start = new Date(vacation.startDate);
         const end = new Date(vacation.endDate);
 
@@ -108,7 +118,10 @@ export function EditVacation() {
                     <img src={imageUrl} alt="Current" className="current-image" />
                 )}
 
-                <button>Update</button>
+                <button disabled={isSubmitting}>
+                    {isSubmitting ? "Updating..." : "Update"}
+                </button>
+
             </form>
         </div>
     );
