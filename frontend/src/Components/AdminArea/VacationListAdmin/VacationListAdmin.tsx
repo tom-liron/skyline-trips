@@ -107,6 +107,7 @@ export function VacationListAdmin() {
             await vacationService.deleteVacation(vacationId); // Server + Redux update
             notify.success("Vacation has been deleted.");
             await load(currentPage); // Refresh page in case last item was deleted
+            window.scrollTo({ top: 0, behavior: "smooth" });
         } catch {
             notify.error("Failed to delete vacation.");
         }
