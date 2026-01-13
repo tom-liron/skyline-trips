@@ -83,6 +83,7 @@ export function VacationListAdmin() {
 
     // Load vacations on initial mount
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         load(1);
     }, []);
 

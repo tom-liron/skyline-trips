@@ -86,6 +86,7 @@ export function VacationsListUser() {
 
     // Load on initial mount
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
         loadVacations();
     }, []);
 
