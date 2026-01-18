@@ -37,7 +37,7 @@ type Row = { destination: string; likes: number };
 
 export function Report() {
     useAdminGuard();
-    useTitle("Reports");
+    useTitle("Report");
 
     const [rows, setRows] = useState<Row[]>([]);
     const [loading, setLoading] = useState(false);
