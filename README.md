@@ -28,8 +28,8 @@ Short screen recordings demonstrating real user and admin flows.
 ### Admin – Vacation Management
 ![Admin Panel](./screenshots/admin-panel.png)
 
-### Admin – Reports
-![Admin Reports](./screenshots/admin-reports.png)
+### Admin – Report
+![Admin Reports](./screenshots/admin-report.png)
 
 ---
 
