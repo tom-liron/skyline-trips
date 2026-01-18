@@ -27,9 +27,7 @@ export function AddVacation() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function send(vacation: VacationModel) {
-
         if (isSubmitting) return;
-        setIsSubmitting(true);
 
         const start = new Date(vacation.startDate as string);
         const end = new Date(vacation.endDate as string);
@@ -56,6 +54,8 @@ export function AddVacation() {
         }
 
         try {
+            setIsSubmitting(true);
+
             await vacationService.addVacation({
                 destination: vacation.destination,
                 description: vacation.description,
@@ -69,8 +69,10 @@ export function AddVacation() {
             navigate(routes.adminVacations);
         } catch {
             notify.error("Failed to add vacation. Please check the form and try again.");
+            setIsSubmitting(false); // 
         }
     }
+
 
     return (
         <div className="AddVacation">
@@ -97,7 +99,7 @@ export function AddVacation() {
                 <input type="file" accept="image/*" {...register("image")} required />
 
                 <button disabled={isSubmitting}>
-                    {isSubmitting ? "Adding..." : "Add"}
+                    Add
                 </button>
 
             </form>

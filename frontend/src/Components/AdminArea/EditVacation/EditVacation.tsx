@@ -50,9 +50,7 @@ export function EditVacation() {
     }, [_id, setValue]);
 
     async function send(vacation: VacationModel) {
-
         if (isSubmitting) return;
-        setIsSubmitting(true);
 
         const start = new Date(vacation.startDate);
         const end = new Date(vacation.endDate);
@@ -63,7 +61,10 @@ export function EditVacation() {
         }
 
         try {
+            setIsSubmitting(true);
+
             const file = (vacation.image as unknown as FileList)?.[0] as File | undefined;
+
             await vacationService.updateVacation(_id, {
                 destination: vacation.destination,
                 description: vacation.description,
@@ -72,14 +73,15 @@ export function EditVacation() {
                 price: Number(vacation.price),
                 ...(file ? { image: file } : {})
             });
+
             notify.success("Vacation has been updated.");
             navigate(routes.adminVacations);
-        }
-        catch {
+        } catch {
             notify.error("Failed to update vacation. Please check the form and try again.");
+            setIsSubmitting(false);
         }
-
     }
+
 
     return (
         <div className="EditVacation">
@@ -119,7 +121,7 @@ export function EditVacation() {
                 )}
 
                 <button disabled={isSubmitting}>
-                    {isSubmitting ? "Updating..." : "Update"}
+                    Update
                 </button>
 
             </form>
