@@ -49,21 +49,30 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     function togglePassword() {
         setShowPassword(prev => !prev);
     }
 
     async function send(user: UserModel) {
+        if (isSubmitting) return; // prevent duplicate submits
+
         try {
+            setIsSubmitting(true);
+
             await userService.login(user);                 // dispatches user into Redux
-            const roleId = store.getState().user?.roleId;  // read updated role
             const userInStore = store.getState().user;
+
             notify.success(`Welcome back ${userInStore?.firstName}!`);
 
+            const roleId = userInStore?.roleId;
             navigate(roleId === Role.Admin ? routes.adminVacations : routes.vacations);
+
         } catch (err) {
             notify.error((err as Error).message);
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -83,7 +92,9 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
             </div>
 
             <div className="actions">
-                <button className="primary" type="submit">Login</button>
+                <button className="primary" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Logging in..." : "Login"}
+                </button>
             </div>
 
             {withFooter && (
