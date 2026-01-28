@@ -26,6 +26,7 @@ export interface IVacationModel extends Document {
   endDate: Date;
   price: number;
   imageUrl: string;
+  imagePublicId: string;
   likedUserIds: ObjectId[];
 }
 
@@ -62,6 +63,11 @@ export const VacationSchema = new Schema<IVacationModel>(
       required: true,
       trim: true,
     },
+    imagePublicId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     likedUserIds: {
       type: [Schema.Types.ObjectId],
       ref: "UserModel",
@@ -71,7 +77,7 @@ export const VacationSchema = new Schema<IVacationModel>(
   {
     versionKey: false,
     timestamps: true,
-  }
+  },
 );
 
 export const VacationModel = model<IVacationModel>("VacationModel", VacationSchema, "vacations");

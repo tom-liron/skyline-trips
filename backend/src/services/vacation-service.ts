@@ -32,7 +32,7 @@ class VacationService {
     filter: FilterType,
     userId: ObjectId | null,
     page: number,
-    pageSize: number
+    pageSize: number,
   ): Promise<{ vacations: IVacationModel[]; totalCount: number }> {
     const query = buildVacationQuery(filter, userId);
 
@@ -58,6 +58,11 @@ class VacationService {
 
   /**
    * Adds a new vacation, validates input, and handles image upload.
+   *
+   * Image handling:
+   * - Uploads the image to Cloudinary
+   * - Persists both the public URL and the Cloudinary public_id
+   * - public_id is required for future image replacement or deletion
    */
   public async addVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
     // Custom date validation
@@ -79,10 +84,13 @@ class VacationService {
       throw new ValidationError("Image is required.");
     }
 
-    // ✅ Populate required field BEFORE validation
-    vacation.imageUrl = await this.uploadImageToCloudinary(image);
+    // Upload image and capture both URL (for frontend rendering)
+    // and public_id (for lifecycle management in Cloudinary)
+    const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
 
-    // ✅ NOW validate full document
+    vacation.imageUrl = imageUrl;
+    vacation.imagePublicId = imagePublicId;
+
     ValidationError.validate(vacation);
 
     return vacation.save();
@@ -91,6 +99,11 @@ class VacationService {
   /**
    * Updates an existing vacation, validates input, and handles image update.
    * Only allowed fields are updated; likedUserIds remain unchanged.
+   *
+   * Image replacement behavior:
+   * - Old Cloudinary image is deleted first
+   * - New image is uploaded
+   * - Both imageUrl and imagePublicId are updated atomically
    */
   public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
     // 1. Load existing vacation from DB
@@ -106,7 +119,13 @@ class VacationService {
 
     // 3. Replace image ONLY if new image provided
     if (image) {
-      existingVacation.imageUrl = await this.uploadImageToCloudinary(image);
+      // Remove previously associated Cloudinary asset
+      await cloudinary.uploader.destroy(existingVacation.imagePublicId);
+
+      const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
+
+      existingVacation.imageUrl = imageUrl;
+      existingVacation.imagePublicId = imagePublicId;
     }
 
     // 4. Validate FULL, FINAL document
@@ -122,10 +141,21 @@ class VacationService {
 
   /**
    * Deletes a vacation and its associated image.
+   *
+   * Deletion order is intentional:
+   * 1. Load vacation to access stored Cloudinary public_id
+   * 2. Delete image from Cloudinary
+   * 3. Delete vacation record from the database
+   *
+   * This prevents orphaned cloud assets.
    */
   public async deleteVacation(_id: string | ObjectId): Promise<void> {
-    const dbVacation = await VacationModel.findByIdAndDelete(_id).exec();
+    const dbVacation = await VacationModel.findById(_id).exec();
     if (!dbVacation) throw new ResourceNotFound(_id);
+
+    await cloudinary.uploader.destroy(dbVacation.imagePublicId);
+
+    await VacationModel.findByIdAndDelete(_id).exec();
   }
 
   /**
@@ -136,7 +166,7 @@ class VacationService {
     const vacation = await VacationModel.findByIdAndUpdate(
       vacationId,
       { $addToSet: { likedUserIds: userId } },
-      { returnOriginal: false }
+      { returnOriginal: false },
     ).exec();
     if (!vacation) throw new ResourceNotFound(vacationId);
     return vacation;
@@ -150,19 +180,29 @@ class VacationService {
     const vacation = await VacationModel.findByIdAndUpdate(
       vacationId,
       { $pull: { likedUserIds: userId } },
-      { returnOriginal: false }
+      { returnOriginal: false },
     ).exec();
     if (!vacation) throw new ResourceNotFound(vacationId);
     return vacation;
   }
 
-  private async uploadImageToCloudinary(image: UploadedFile): Promise<string> {
+  /**
+   * Uploads an image to Cloudinary and returns persistent identifiers.
+   *
+   * Returned values:
+   * - imageUrl: Public HTTPS URL used by the frontend
+   * - imagePublicId: Cloudinary identifier required for delete/update operations
+   */
+  private async uploadImageToCloudinary(image: UploadedFile): Promise<{ imageUrl: string; imagePublicId: string }> {
     const result = await cloudinary.uploader.upload(image.tempFilePath, {
       folder: "skyline-trips/vacations",
       resource_type: "image",
     });
 
-    return result.secure_url;
+    return {
+      imageUrl: result.secure_url,
+      imagePublicId: result.public_id,
+    };
   }
 
   /**
