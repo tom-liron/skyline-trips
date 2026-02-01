@@ -19,7 +19,7 @@ class UserController {
   // Router object - holds all routes:
   public router: Router = express.Router();
 
-  // Register routes:
+  // Authentication routes
   public constructor() {
     this.router.post("/api/register", securityMiddleware.preventXssAttack, this.register);
     this.router.post("/api/login", securityMiddleware.preventXssAttack, this.login);
