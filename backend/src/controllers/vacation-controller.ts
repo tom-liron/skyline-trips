@@ -39,7 +39,13 @@ class VacationController {
       this.likeVacation
     );
 
-
+    this.router.delete(
+      "/api/vacations/:_id/like",
+      securityMiddleware.verifyToken,
+      preventAdminLike,
+      this.unlikeVacation
+    );
+      
     // Admin routes
     this.router.post(
       "/api/vacations",
