@@ -12,7 +12,7 @@ import { serializeVacation, serializeVacations } from "../utils/vacation-seriali
 /**
  * Express controller for vacation-related API endpoints.
  * Handles CRUD operations, likes, and admin reporting.
- * Applies authentication, authorization, and XSS prevention middleware as needed.
+ * * Applies authentication and authorization middleware as needed.
  */
 
 class VacationController {
@@ -20,47 +20,60 @@ class VacationController {
 
   public constructor() {
     // Public routes for logged-in users
-    this.router.get("/api/vacations", securityMiddleware.verifyToken, this.getVacations);
-    this.router.get("/api/vacations/:_id", securityMiddleware.verifyToken, this.getOneVacation);
-    this.router.post("/api/vacations/:_id/like", securityMiddleware.verifyToken, preventAdminLike, this.likeVacation);
-    this.router.delete(
+    this.router.get(
+      "/api/vacations",
+      securityMiddleware.verifyToken,
+      this.getVacations
+    );
+
+    this.router.get(
+      "/api/vacations/:_id",
+      securityMiddleware.verifyToken,
+      this.getOneVacation
+    );
+
+    this.router.post(
       "/api/vacations/:_id/like",
       securityMiddleware.verifyToken,
       preventAdminLike,
-      this.unlikeVacation
+      this.likeVacation
     );
+
 
     // Admin routes
     this.router.post(
       "/api/vacations",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      this.addVacation
+      this.addVacation,
     );
 
     this.router.patch(
       "/api/vacations/:_id",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      this.updateVacation
+      this.updateVacation,
     );
+
     this.router.delete(
       "/api/vacations/:_id",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      this.deleteVacation
+      this.deleteVacation,
     );
+
     this.router.get(
       "/api/vacations/report/csv",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      this.getReportCSV
+      this.getReportCSV,
     );
+
     this.router.get(
       "/api/vacations/report/json",
       securityMiddleware.verifyToken,
       securityMiddleware.verifyAdmin,
-      this.getReportJSON
+      this.getReportJSON,
     );
   }
 
@@ -69,7 +82,8 @@ class VacationController {
     const filter: FilterType = parseFilter(request.query.filter);
     const page = parsePage(request.query.page as string | undefined);
     const pageSize = parsePageSize(request.query.pageSize as string | undefined);
-    const userId = response.locals.user?._id;
+
+    const userId = response.locals.user._id.toString();
 
     const { vacations, totalCount } = await vacationService.getVacations(filter, userId, page, pageSize);
 
@@ -85,8 +99,9 @@ class VacationController {
   // Get a single vacation by id for the current user
   private async getOneVacation(request: Request, response: Response) {
     const _id = request.params._id;
-      const vacation = await vacationService.getOneVacation(_id);
-      const userId = response.locals.user._id.toString();
+    const vacation = await vacationService.getOneVacation(_id);
+    const userId = response.locals.user._id.toString();
+
     response.json(serializeVacation(vacation, userId));
   }
 
@@ -94,6 +109,7 @@ class VacationController {
   private async addVacation(request: Request, response: Response) {
     const vacation = new VacationModel(request.body);
     const image = request.files?.image as UploadedFile;
+
     const dbVacation = await vacationService.addVacation(vacation, image);
     response.status(StatusCode.Created).json(dbVacation);
   }
@@ -101,8 +117,10 @@ class VacationController {
   // Update an existing vacation (admin only)
   private async updateVacation(request: Request, response: Response) {
     request.body._id = request.params._id;
+
     const vacation = new VacationModel(request.body);
     const image = request.files?.image as UploadedFile;
+
     const dbVacation = await vacationService.updateVacation(vacation, image);
     response.json(dbVacation);
   }
@@ -110,26 +128,32 @@ class VacationController {
   // Delete a vacation (admin only)
   private async deleteVacation(request: Request, response: Response) {
     const _id = request.params._id;
+
     await vacationService.deleteVacation(_id);
     response.sendStatus(StatusCode.NoContent);
   }
 
   // Like a vacation (user only, admin prevented)
   private async likeVacation(request: Request, response: Response) {
-    const vacation = await vacationService.likeVacation(request.params._id, response.locals.user._id);
-    response.json(serializeVacation(vacation, response.locals.user._id));
+    const userId = response.locals.user._id.toString();
+
+    const vacation = await vacationService.likeVacation(request.params._id, userId);
+
+    response.json(serializeVacation(vacation, userId));
   }
 
   // Unlike a vacation (user only, admin prevented)
   private async unlikeVacation(request: Request, response: Response) {
-    const vacation = await vacationService.unlikeVacation(request.params._id, response.locals.user._id);
-    response.json(serializeVacation(vacation, response.locals.user._id));
+    const userId = response.locals.user._id.toString();
+
+    const vacation = await vacationService.unlikeVacation(request.params._id, userId);
+
+    response.json(serializeVacation(vacation, userId));
   }
 
   // Generate and return a CSV report of vacations (admin only)
   private async getReportCSV(request: Request, response: Response) {
     const csvData = await vacationService.generateVacationsReportCSV();
-
     response.type("csv").attachment("vacations-report.csv").send(csvData);
   }
 
