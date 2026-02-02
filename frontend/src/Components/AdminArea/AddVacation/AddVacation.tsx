@@ -73,7 +73,6 @@ export function AddVacation() {
         }
     }
 
-
     return (
         <div className="AddVacation">
             <form onSubmit={handleSubmit(send)}>

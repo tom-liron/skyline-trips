@@ -19,8 +19,8 @@ class Cyber {
 
   // Create a JWT token for a user
   public generateToken(user: IUserModel): string {
-    (user as any).password = undefined; // remove password from token
-    const container = { user };
+    const { password, ...safeUser } = user.toObject();
+    const container = { user: safeUser };
     const options: SignOptions = { expiresIn: "3h" };
     return jwt.sign(container, appConfig.jwtSecretKey, options);
   }

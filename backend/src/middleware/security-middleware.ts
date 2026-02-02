@@ -60,7 +60,7 @@ class SecurityMiddleware {
    * to prevent basic XSS (Cross-Site Scripting) attacks.
    * Only affects string fields; other types are untouched.
    */
-  public preventXssAttack(request: Request, response: Response, next: NextFunction): void {
+  public normalizeTextFields(request: Request, response: Response, next: NextFunction): void {
     for (const prop in request.body) {
       const value = request.body[prop];
       if (typeof value === "string") {

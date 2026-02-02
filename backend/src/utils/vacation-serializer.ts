@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { IVacationModel } from "../models/vacation-model";
 
 /**
@@ -14,15 +15,18 @@ import { IVacationModel } from "../models/vacation-model";
 /**
  * Serializes a single vacation document, adding user-specific and computed fields.
  * @param vacation - The vacation document to serialize.
- * @param userId - The current user's id, used to determine if the user liked this vacation.
+ * @param userId - The current user's id (normalized string).
  * @returns Serialized vacation object for API response.
  */
-export function serializeVacation(vacation: IVacationModel, userId: any) {
-  // Convert Mongoose document to plain JS object, including virtuals
-  const vacationObj = vacation.toObject({ virtuals: true });
+export function serializeVacation(vacation: IVacationModel, userId: string) {
+  // Convert Mongoose document to plain JS object
+  const vacationObj = vacation.toObject();
 
   // Determine if the current user liked this vacation
-  const likedByMe = vacationObj.likedUserIds?.some((id: any) => id.toString() === userId.toString());
+  const likedByMe = vacationObj.likedUserIds?.some(
+    (id: ObjectId) => id.toString() === userId
+  ) ?? false;
+
   // Count total likes
   const likesCount = vacationObj.likedUserIds?.length ?? 0;
 
@@ -39,9 +43,9 @@ export function serializeVacation(vacation: IVacationModel, userId: any) {
 /**
  * Serializes an array of vacation documents.
  * @param vacations - Array of vacation documents.
- * @param userId - The current user's id.
+ * @param userId - The current user's id (normalized string).
  * @returns Array of serialized vacation objects.
  */
-export function serializeVacations(vacations: IVacationModel[], userId: any) {
+export function serializeVacations(vacations: IVacationModel[], userId: string) {
   return vacations.map((v) => serializeVacation(v, userId));
 }

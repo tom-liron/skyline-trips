@@ -85,8 +85,9 @@ class VacationController {
   // Get a single vacation by id for the current user
   private async getOneVacation(request: Request, response: Response) {
     const _id = request.params._id;
-    const vacation = await vacationService.getOneVacation(_id);
-    response.json(serializeVacation(vacation, response.locals.user._id));
+      const vacation = await vacationService.getOneVacation(_id);
+      const userId = response.locals.user._id.toString();
+    response.json(serializeVacation(vacation, userId));
   }
 
   // Add a new vacation (admin only)
@@ -115,14 +116,14 @@ class VacationController {
 
   // Like a vacation (user only, admin prevented)
   private async likeVacation(request: Request, response: Response) {
-    const v = await vacationService.likeVacation(request.params._id, response.locals.user._id);
-    response.json(serializeVacation(v, response.locals.user._id));
+    const vacation = await vacationService.likeVacation(request.params._id, response.locals.user._id);
+    response.json(serializeVacation(vacation, response.locals.user._id));
   }
 
   // Unlike a vacation (user only, admin prevented)
   private async unlikeVacation(request: Request, response: Response) {
-    const v = await vacationService.unlikeVacation(request.params._id, response.locals.user._id);
-    response.json(serializeVacation(v, response.locals.user._id));
+    const vacation = await vacationService.unlikeVacation(request.params._id, response.locals.user._id);
+    response.json(serializeVacation(vacation, response.locals.user._id));
   }
 
   // Generate and return a CSV report of vacations (admin only)

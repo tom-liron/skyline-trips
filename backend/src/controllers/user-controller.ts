@@ -21,8 +21,8 @@ class UserController {
 
   // Authentication routes
   public constructor() {
-    this.router.post("/api/register", securityMiddleware.preventXssAttack, this.register);
-    this.router.post("/api/login", securityMiddleware.preventXssAttack, this.login);
+    this.router.post("/api/register", securityMiddleware.normalizeTextFields, this.register);
+    this.router.post("/api/login", securityMiddleware.normalizeTextFields, this.login);
   }
 
   // Register a new user:
