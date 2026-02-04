@@ -21,7 +21,7 @@ class App {
     // Connecting to MongoDB:
     await mongoose.connect(appConfig.mongodbConnectionString);
 
-    // Create the server object:
+    // Create the Express application (middleware + routing pipeline):
     const server = express();
 
     server.use(cors()); // Allow access from any client.
@@ -34,7 +34,7 @@ class App {
       fileUpload({
         useTempFiles: true,
         tempFileDir: "/tmp/",
-      })
+      }),
     );
 
     // Listen to controller routes:

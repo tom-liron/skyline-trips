@@ -150,10 +150,10 @@ class VacationService {
    * This prevents orphaned cloud assets.
    */
   public async deleteVacation(_id: string | ObjectId): Promise<void> {
-    const dbVacation = await VacationModel.findById(_id).exec();
-    if (!dbVacation) throw new ResourceNotFound(_id);
+    const existingVacation = await VacationModel.findById(_id).exec();
+    if (!existingVacation) throw new ResourceNotFound(_id);
 
-    await cloudinary.uploader.destroy(dbVacation.imagePublicId);
+    await cloudinary.uploader.destroy(existingVacation.imagePublicId);
 
     await VacationModel.findByIdAndDelete(_id).exec();
   }

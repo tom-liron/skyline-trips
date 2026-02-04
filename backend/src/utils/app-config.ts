@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 /**
  * Loads and exposes application configuration from environment variables.
  * Uses dotenv to load variables from a .env file at startup.
- * Provides readonly properties for environment, database, JWT, and image settings.
+ * Provides readonly properties for environment flags, server port,
+ * database connection, JWT configuration, and password hashing.
  * Import and use the exported `appConfig` singleton throughout the backend.
  */
 

@@ -33,7 +33,7 @@ class SecurityMiddleware {
       const auth = request.headers.authorization || "";
       const token = auth.startsWith("Bearer ") ? auth.slice(7) : undefined;
 
-      const decoded = cyber.decodeToken(token); // throws AuthorizationError (401)
+      const decoded = cyber.decodeToken(token); // May throw AuthorizationError (401) if token is missing, invalid, or expired
       response.locals.user = decoded.user;
       next();
     } catch (err) {

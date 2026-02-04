@@ -45,10 +45,11 @@ class UserService {
     user.password = cyber.hash(user.password);
 
     // Save user
-    const dbUser = await user.save();
+    const savedUser = await user.save();
 
-    // Generate token
-    return cyber.generateToken(dbUser);
+    // Generate and return JWT token
+    const token = cyber.generateToken(savedUser);
+    return token;
   }
 
   /**
@@ -69,11 +70,11 @@ class UserService {
     credentials.password = cyber.hash(credentials.password);
 
     // Find user by email and hashed password
-    const dbUser = await UserModel.findOne({ email: credentials.email, password: credentials.password }).exec();
-    if (!dbUser) throw new AuthorizationError("Incorrect email or password.");
+    const existingUser = await UserModel.findOne({ email: credentials.email, password: credentials.password }).exec();
+    if (!existingUser) throw new AuthorizationError("Incorrect email or password.");
 
     // Generate and return JWT token
-    const token = cyber.generateToken(dbUser);
+    const token = cyber.generateToken(existingUser);
     return token;
   }
 }
