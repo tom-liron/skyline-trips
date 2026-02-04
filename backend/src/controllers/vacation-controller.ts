@@ -116,8 +116,8 @@ class VacationController {
     const vacation = new VacationModel(request.body);
     const image = request.files?.image as UploadedFile;
 
-    const dbVacation = await vacationService.addVacation(vacation, image);
-    response.status(StatusCode.Created).json(dbVacation);
+    const savedVacation = await vacationService.addVacation(vacation, image);
+    response.status(StatusCode.Created).json(savedVacation);
   }
 
   // Update an existing vacation (admin only)
@@ -127,8 +127,8 @@ class VacationController {
     const vacation = new VacationModel(request.body);
     const image = request.files?.image as UploadedFile;
 
-    const dbVacation = await vacationService.updateVacation(vacation, image);
-    response.json(dbVacation);
+    const updatedVacation = await vacationService.updateVacation(vacation, image);
+    response.json(updatedVacation);
   }
 
   // Delete a vacation (admin only)
