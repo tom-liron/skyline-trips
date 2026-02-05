@@ -91,6 +91,8 @@ class VacationService {
     vacation.imageUrl = imageUrl;
     vacation.imagePublicId = imagePublicId;
 
+    // Validate after image fields are set,
+    // because imageUrl and imagePublicId are required by the schema
     ValidationError.validate(vacation);
 
     return vacation.save();
@@ -106,18 +108,22 @@ class VacationService {
    * - Both imageUrl and imagePublicId are updated atomically
    */
   public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
-    // 1. Load existing vacation from DB
+    // Load existing vacation from DB
     const existingVacation = await VacationModel.findById(vacation._id).exec();
     if (!existingVacation) throw new ResourceNotFound(vacation._id);
 
-    // 2. Apply updated scalar fields
+    // Apply updated scalar fields
     existingVacation.destination = vacation.destination;
     existingVacation.description = vacation.description;
     existingVacation.startDate = vacation.startDate;
     existingVacation.endDate = vacation.endDate;
     existingVacation.price = vacation.price;
 
-    // 3. Replace image ONLY if new image provided
+    if (existingVacation.endDate < existingVacation.startDate) {
+      throw new ValidationError("End date must be after start date.");
+    }
+
+    // Replace image ONLY if new image provided
     if (image) {
       // Remove previously associated Cloudinary asset
       await cloudinary.uploader.destroy(existingVacation.imagePublicId);
@@ -128,14 +134,10 @@ class VacationService {
       existingVacation.imagePublicId = imagePublicId;
     }
 
-    // 4. Validate FULL, FINAL document
+    // Validate FULL, FINAL document
     ValidationError.validate(existingVacation);
 
-    if (existingVacation.endDate < existingVacation.startDate) {
-      throw new ValidationError("End date must be after start date.");
-    }
-
-    // 5. Save
+    // Save
     return existingVacation.save();
   }
 
