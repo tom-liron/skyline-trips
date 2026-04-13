@@ -81,6 +81,7 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
 
         } catch (err) {
             console.log("Login.send -> catch", err);
+            notify.success("ERROR FLOW REACHED");
             notify.error(err);
         } finally {
             console.log("FINALLY TRIGGERED");
