@@ -48,7 +48,7 @@ class App {
     server.use(errorMiddleware.catchAll);
 
     // Run server:
-    server.listen(appConfig.port, () => console.log("Listening on http://localhost:" + appConfig.port));
+    server.listen(appConfig.port, () => console.log(`Server is running on port ${appConfig.port}`));
   }
 }
 
