@@ -156,7 +156,7 @@ class VacationService {
         formData.append("image", image);
       }
 
-      const { data } = await axios.patch<VacationModel>(`${appConfig.vacationsUrl}/${_id}`, formData);
+      const { data } = await axios.patch<VacationModel>(`${appConfig.vacationsUrl}${_id}`, formData);
 
       store.dispatch(vacationSlice.actions.updateVacation(data));
     } catch (err: any) {
