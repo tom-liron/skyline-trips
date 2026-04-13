@@ -44,7 +44,7 @@ class VacationService {
   public async getVacations(
     filter: VacationFilter,
     page: number,
-    pageSize = appConfig.pageSize
+    pageSize = appConfig.pageSize,
   ): Promise<PaginatedVacationsMeta> {
     try {
       const response = await axios.get<PaginatedResponse>(appConfig.vacationsUrl, {
@@ -141,23 +141,29 @@ class VacationService {
    */
   public async updateVacation(
     _id: string,
-    { destination, description, startDate, endDate, price, image }: UpdateVacationDto
+    { destination, description, startDate, endDate, price, image }: UpdateVacationDto,
   ): Promise<void> {
     try {
       const formData = new FormData();
+
       formData.append("destination", destination);
       formData.append("description", description);
       formData.append("startDate", startDate);
       formData.append("endDate", endDate);
       formData.append("price", String(price));
-      if (image) formData.append("image", image);
 
-      const requestOptions: AxiosRequestConfig = { headers: { "Content-Type": "multipart/form-data" } };
-      const { data } = await axios.patch<VacationModel>(appConfig.vacationsUrl + _id, formData, requestOptions);
+      if (image) {
+        formData.append("image", image);
+      }
+
+      const { data } = await axios.patch<VacationModel>(
+        `${appConfig.vacationsUrl}/${_id}`, // ✅ FIXED URL
+        formData, // ✅ NO headers needed
+      );
 
       store.dispatch(vacationSlice.actions.updateVacation(data));
-    } catch {
-      throw new Error("Failed to update vacation. Please check the form and try again.");
+    } catch (err: any) {
+      throw err; // ✅ let notify/errorExtractor handle real message
     }
   }
 
