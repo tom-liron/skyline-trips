@@ -43,8 +43,12 @@ class Interceptor {
 
       // If response failed:
       (error) => {
-        // If backend returned 401 (expired / invalid token):
-        if (error.response?.status === 401) {
+        const status = error.response?.status;
+        const requestUrl = error.config?.url ?? "";
+        const isLoginRequest = requestUrl.includes("/login");
+
+        // Only auto-logout on 401 for requests other than login:
+        if (status === 401 && !isLoginRequest) {
           // Clear user state from Redux:
           store.dispatch(userSlice.actions.logoutUser());
 
