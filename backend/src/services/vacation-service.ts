@@ -107,39 +107,45 @@ class VacationService {
    * - New image is uploaded
    * - Both imageUrl and imagePublicId are updated atomically
    */
-  public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
-    // Load existing vacation from DB
-    const existingVacation = await VacationModel.findById(vacation._id).exec();
-    if (!existingVacation) throw new ResourceNotFound(vacation._id);
+public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
 
-    // Apply updated scalar fields
-    existingVacation.destination = vacation.destination;
-    existingVacation.description = vacation.description;
-    existingVacation.startDate = vacation.startDate;
-    existingVacation.endDate = vacation.endDate;
-    existingVacation.price = vacation.price;
+  // Load existing vacation from DB
+  const existingVacation = await VacationModel.findById(vacation._id).exec();
+  if (!existingVacation) throw new ResourceNotFound(vacation._id);
 
-    if (existingVacation.endDate < existingVacation.startDate) {
-      throw new ValidationError("End date must be after start date.");
-    }
+  // Apply updated scalar fields
+  existingVacation.destination = vacation.destination;
+  existingVacation.description = vacation.description;
+  existingVacation.startDate = vacation.startDate;
+  existingVacation.endDate = vacation.endDate;
+  existingVacation.price = vacation.price;
 
-    // Replace image ONLY if new image provided
-    if (image) {
-      // Remove previously associated Cloudinary asset
-      await cloudinary.uploader.destroy(existingVacation.imagePublicId);
-
-      const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
-
-      existingVacation.imageUrl = imageUrl;
-      existingVacation.imagePublicId = imagePublicId;
-    }
-
-    // Validate FULL, FINAL document
-    ValidationError.validate(existingVacation);
-
-    // Save
-    return existingVacation.save();
+  // Validate date logic
+  if (existingVacation.endDate < existingVacation.startDate) {
+    throw new ValidationError("End date must be after start date.");
   }
+
+  if (image) {
+    // Remove old image from Cloudinary
+    await cloudinary.uploader.destroy(existingVacation.imagePublicId);
+
+    // Upload new image
+    const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
+
+    existingVacation.imageUrl = imageUrl;
+    existingVacation.imagePublicId = imagePublicId;
+  } else {
+    // explicitly preserve existing values
+    existingVacation.imageUrl = existingVacation.imageUrl;
+    existingVacation.imagePublicId = existingVacation.imagePublicId;
+  }
+
+  // Validate FULL, FINAL document
+  ValidationError.validate(existingVacation);
+
+  // Save
+  return existingVacation.save();
+}
 
   /**
    * Deletes a vacation and its associated image.
