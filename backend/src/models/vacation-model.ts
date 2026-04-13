@@ -60,12 +60,12 @@ export const VacationSchema = new Schema<IVacationModel>(
     },
     imageUrl: {
       type: String,
-      required: true,
+      required: true, // imagePublicId is optional to support legacy vacations created before Cloudinary integration
       trim: true,
     },
     imagePublicId: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     likedUserIds: {
