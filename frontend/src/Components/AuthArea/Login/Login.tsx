@@ -10,7 +10,7 @@ import { Copyrights } from "../../LayoutArea/Copyrights/Copyrights";
 import { store } from "../../../Redux/Store";
 import { Role } from "../../../Models/Role";
 import { useTitle } from "../../../Utils/UseTitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 /**
@@ -44,6 +44,14 @@ type Props = {
 export function Login({ embedded = false, withFooter = true, showBackground = true }: Props) {
 
     useTitle("Login");
+
+    useEffect(() => {
+        console.log("Login mounted");
+
+        return () => {
+            console.log("Login unmounted");
+        };
+    }, []);
 
     const { register, handleSubmit } = useForm<UserModel>();
     const navigate = useNavigate();
