@@ -148,22 +148,19 @@ class VacationService {
 
       formData.append("destination", destination);
       formData.append("description", description);
-      formData.append("startDate", startDate);
-      formData.append("endDate", endDate);
+      formData.append("startDate", new Date(startDate).toISOString());
+      formData.append("endDate", new Date(endDate).toISOString());
       formData.append("price", String(price));
 
       if (image) {
         formData.append("image", image);
       }
 
-      const { data } = await axios.patch<VacationModel>(
-        `${appConfig.vacationsUrl}/${_id}`, // ✅ FIXED URL
-        formData, // ✅ NO headers needed
-      );
+      const { data } = await axios.patch<VacationModel>(`${appConfig.vacationsUrl}/${_id}`, formData);
 
       store.dispatch(vacationSlice.actions.updateVacation(data));
     } catch (err: any) {
-      throw err; // ✅ let notify/errorExtractor handle real message
+      throw err;
     }
   }
 
