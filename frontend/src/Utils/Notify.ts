@@ -23,23 +23,12 @@ class Notify {
   }
 
   public error(err: any): void {
-    console.log("Notify.error -> received", err);
+    const message =
+      typeof err === "string"
+        ? err
+        : (errorExtractor.getMessage(err) || "Something went wrong");
 
-    const message = typeof err === "string" ? err : errorExtractor.getMessage(err) || "Something went wrong";
-
-    console.log("Notify.error -> extracted message", message);
-
-    try {
-      const result = this.notyf.error(message);
-      console.log("Notify.error -> notyf.error returned", result);
-    } catch (innerErr) {
-      console.log("Notify.error -> notyf.error threw", innerErr);
-    }
-
-    setTimeout(() => {
-      console.log("Notify.error -> DOM error toasts count", document.querySelectorAll(".notyf__toast--error").length);
-      console.log("Notify.error -> DOM all toasts count", document.querySelectorAll(".notyf__toast").length);
-    }, 100);
+    this.notyf.error(message);
   }
 }
 

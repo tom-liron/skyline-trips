@@ -64,11 +64,8 @@ class UserService {
   // Login as existing user:
   public async login(credentials: CredentialsModel): Promise<void> {
     try {
-      console.log("UserService.login -> before axios");
       // Send user to backend:
       const response = await axios.post<string>(appConfig.loginUrl, credentials);
-
-      console.log("UserService.login -> after axios success", response.data);
 
       // Extract token:
       const token: string = response.data;
@@ -82,8 +79,7 @@ class UserService {
       // Save token in local storage:
       localStorage.setItem("token", token);
     } catch (err) {
-      console.log("UserService.login -> catch", err);
-      throw err; // ✅ preserve backend error
+      throw err;
     }
   }
 

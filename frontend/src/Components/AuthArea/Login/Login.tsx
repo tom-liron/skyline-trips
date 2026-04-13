@@ -10,7 +10,7 @@ import { Copyrights } from "../../LayoutArea/Copyrights/Copyrights";
 import { store } from "../../../Redux/Store";
 import { Role } from "../../../Models/Role";
 import { useTitle } from "../../../Utils/UseTitle";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
 /**
@@ -45,14 +45,6 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
 
     useTitle("Login");
 
-    useEffect(() => {
-        console.log("Login mounted");
-
-        return () => {
-            console.log("Login unmounted");
-        };
-    }, []);
-
     const { register, handleSubmit } = useForm<UserModel>();
     const navigate = useNavigate();
 
@@ -64,23 +56,13 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
     }
 
     async function send(user: UserModel) {
-        console.log("SEND STARTED", user);
-
-        if (isSubmitting) {
-            console.log("BLOCKED BY isSubmitting");
-            return;
-        }
+        if (isSubmitting) return;
 
         try {
-            console.log("BEFORE setIsSubmitting");
             setIsSubmitting(true);
 
-            console.log("BEFORE userService.login");
             await userService.login(user);
-            console.log("AFTER userService.login");
-
             const userInStore = store.getState().user;
-            console.log("USER IN STORE AFTER LOGIN", userInStore);
 
             notify.success(`Welcome back ${userInStore?.firstName}!`);
 
@@ -88,11 +70,8 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
             navigate(roleId === Role.Admin ? routes.adminVacations : routes.vacations);
 
         } catch (err) {
-            console.log("Login.send -> catch", err);
-            notify.success("ERROR FLOW REACHED");
             notify.error(err);
         } finally {
-            console.log("FINALLY TRIGGERED");
             setIsSubmitting(false);
         }
     }
