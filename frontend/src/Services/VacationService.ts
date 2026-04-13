@@ -146,20 +146,34 @@ class VacationService {
     try {
       const formData = new FormData();
 
+      // --- DEBUG (leave for now) ---
+      console.log("UPDATE _id:", _id);
+      console.log("RAW dates:", startDate, endDate);
+
+      const isoStart = new Date(startDate).toISOString();
+      const isoEnd = new Date(endDate).toISOString();
+
+      console.log("ISO dates:", isoStart, isoEnd);
+
+      const url = `${appConfig.vacationsUrl}${_id}`;
+      console.log("FINAL URL:", url);
+      // ----------------------------
+
       formData.append("destination", destination);
       formData.append("description", description);
-      formData.append("startDate", new Date(startDate).toISOString());
-      formData.append("endDate", new Date(endDate).toISOString());
+      formData.append("startDate", isoStart);
+      formData.append("endDate", isoEnd);
       formData.append("price", String(price));
 
       if (image) {
         formData.append("image", image);
       }
 
-      const { data } = await axios.patch<VacationModel>(`${appConfig.vacationsUrl}${_id}`, formData);
+      const { data } = await axios.patch<VacationModel>(url, formData);
 
       store.dispatch(vacationSlice.actions.updateVacation(data));
     } catch (err: any) {
+      console.log("UPDATE ERROR RESPONSE:", err?.response?.data);
       throw err;
     }
   }
