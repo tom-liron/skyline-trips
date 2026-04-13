@@ -108,7 +108,6 @@ class VacationService {
    * - Both imageUrl and imagePublicId are updated atomically
    */
   public async updateVacation(vacation: IVacationModel, image?: UploadedFile): Promise<IVacationModel> {
-    console.log("🚨 BACKEND UPDATE METHOD HIT 🚨");
     // Load existing vacation from DB
     const existingVacation = await VacationModel.findById(vacation._id).exec();
     if (!existingVacation) throw new ResourceNotFound(vacation._id);
@@ -122,25 +121,24 @@ class VacationService {
 
     // Validate date logic
     if (existingVacation.endDate < existingVacation.startDate) {
-        throw new ValidationError("End date must be after start date.");
+      throw new ValidationError("End date must be after start date.");
     }
-    
+
     if (image) {
-        // Remove old image from Cloudinary
-        await cloudinary.uploader.destroy(existingVacation.imagePublicId);
-        
-        // Upload new image
-        const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
-        
-        existingVacation.imageUrl = imageUrl;
-        existingVacation.imagePublicId = imagePublicId;
+      // Remove old image from Cloudinary
+      await cloudinary.uploader.destroy(existingVacation.imagePublicId);
+
+      // Upload new image
+      const { imageUrl, imagePublicId } = await this.uploadImageToCloudinary(image);
+
+      existingVacation.imageUrl = imageUrl;
+      existingVacation.imagePublicId = imagePublicId;
     } else {
-        // explicitly preserve existing values
-        existingVacation.imageUrl = existingVacation.imageUrl;
-        existingVacation.imagePublicId = existingVacation.imagePublicId;
+      // explicitly preserve existing values
+      existingVacation.imageUrl = existingVacation.imageUrl;
+      existingVacation.imagePublicId = existingVacation.imagePublicId;
     }
-    
-    console.log("IMAGE PUBLIC ID BEFORE VALIDATION:", existingVacation.imagePublicId);
+
     // Validate FULL, FINAL document
     ValidationError.validate(existingVacation);
 
