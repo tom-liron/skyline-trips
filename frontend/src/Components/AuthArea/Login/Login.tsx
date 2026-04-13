@@ -56,13 +56,23 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
     }
 
     async function send(user: UserModel) {
-        if (isSubmitting) return; // prevent duplicate submits
+        console.log("SEND STARTED", user);
+
+        if (isSubmitting) {
+            console.log("BLOCKED BY isSubmitting");
+            return;
+        }
 
         try {
+            console.log("BEFORE setIsSubmitting");
             setIsSubmitting(true);
 
-            await userService.login(user);                 // dispatches user into Redux
+            console.log("BEFORE userService.login");
+            await userService.login(user);
+            console.log("AFTER userService.login");
+
             const userInStore = store.getState().user;
+            console.log("USER IN STORE AFTER LOGIN", userInStore);
 
             notify.success(`Welcome back ${userInStore?.firstName}!`);
 
@@ -70,8 +80,10 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
             navigate(roleId === Role.Admin ? routes.adminVacations : routes.vacations);
 
         } catch (err) {
-            notify.error((err as Error).message);
+            console.log("Login.send -> catch", err);
+            notify.error(err);
         } finally {
+            console.log("FINALLY TRIGGERED");
             setIsSubmitting(false);
         }
     }

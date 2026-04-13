@@ -12,22 +12,22 @@ import { Notyf } from "notyf";
  */
 
 class Notify {
+  private notyf = new Notyf({
+    duration: 3000,
+    position: { x: "center", y: "top" },
+    dismissible: true,
+  });
 
-    private notyf = new Notyf({
-        duration: 3000,
-        position: { x: "center", y: "top" },
-        dismissible: true
-    });
+  public success(message: string): void {
+    this.notyf.success(message);
+  }
 
-    public success(message: string): void {
-        this.notyf.success(message);
-    }
-
-    public error(err: any): void {
-        const message = errorExtractor.getMessage(err);
-        this.notyf.error(message);
-    }
-
+  public error(err: any): void {
+    console.log("Notify.error -> received", err);
+    const message = typeof err === "string" ? err : errorExtractor.getMessage(err) || "Something went wrong";
+    console.log("Notify.error -> extracted message", message);
+    this.notyf.error(message);
+  }
 }
 
 export const notify = new Notify();
