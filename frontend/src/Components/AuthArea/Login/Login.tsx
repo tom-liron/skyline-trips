@@ -54,7 +54,7 @@ export function Login({ embedded = false, withFooter = true, showBackground = tr
     function togglePassword() {
         setShowPassword(prev => !prev);
     }
-
+// cleanup: removed debug logs
     async function send(user: UserModel) {
         if (isSubmitting) return;
 
