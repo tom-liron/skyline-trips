@@ -11,6 +11,15 @@ Skyline Trips is a full-stack vacation management platform that allows users to 
 
 ---
 
+## Deployment Note – ⏳ Cold Start Notice (Backend Hosting)
+
+The backend is hosted on **Render’s free tier** and scales down after periods of inactivity.
+
+As a result, the **first API request** (register/login) **will take 60–120 seconds or more** to respond due to a cold start.
+Once the service is active, the application performs normally and responds quickly.
+
+---
+
 ## 🎥 Video Walkthrough
 
 Short screen recordings demonstrating real user and admin flows.
@@ -30,15 +39,6 @@ Short screen recordings demonstrating real user and admin flows.
 
 ### Admin – Report
 ![Admin Reports](./screenshots/admin-report.png)
-
----
-
-## Deployment Note – ⏳ Cold Start Notice (Backend Hosting)
-
-The backend is hosted on **Render’s free tier** and scales down after periods of inactivity.
-
-As a result, the **first API request** (register/login) **will take 60–120 seconds or more** to respond due to a cold start.
-Once the service is active, the application performs normally and responds quickly.
 
 ---
 
