@@ -35,6 +35,12 @@ import { useAdminGuard } from "../../../Utils/UseAdminGuard";
 
 type Row = { destination: string; likes: number };
 
+type LikesTooltipProps = {
+    active?: boolean;
+    payload?: { value: number }[];
+    label?: string;
+};
+
 export function Report() {
     useAdminGuard();
     useTitle("Report");
@@ -62,7 +68,7 @@ export function Report() {
 
     const maxLikes = useMemo(() => Math.max(1, ...sorted.map(r => r.likes)), [sorted]);
 
-    const TooltipContent = ({ active, payload, label }: any) => {
+    const TooltipContent = ({ active, payload, label }: LikesTooltipProps) => {
         if (!active || !payload?.length) return null;
         const likes = payload[0].value;
         return (
