@@ -7,7 +7,7 @@ Skyline Trips is a full-stack vacation management platform that allows users to 
 ## Live Demo
 
 - **Frontend:** https://skyline-trips.vercel.app  
-- **Backend API:** https://skyline-trips.onrender.com
+- **Backend:** Deployed on Render and connected to the live frontend.
 
 ---
 
