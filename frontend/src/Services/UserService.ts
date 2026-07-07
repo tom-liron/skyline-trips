@@ -63,24 +63,20 @@ class UserService {
 
   // Login as existing user:
   public async login(credentials: CredentialsModel): Promise<void> {
-    try {
-      // Send user to backend:
-      const response = await axios.post<string>(appConfig.loginUrl, credentials);
+    // Send user to backend:
+    const response = await axios.post<string>(appConfig.loginUrl, credentials);
 
-      // Extract token:
-      const token: string = response.data;
+    // Extract token:
+    const token: string = response.data;
 
-      // Extract user from token:
-      const dbUser = jwtDecode<{ user: UserModel }>(token).user;
+    // Extract user from token:
+    const dbUser = jwtDecode<{ user: UserModel }>(token).user;
 
-      // Send to global state:
-      store.dispatch(userSlice.actions.initUser(dbUser));
+    // Send to global state:
+    store.dispatch(userSlice.actions.initUser(dbUser));
 
-      // Save token in local storage:
-      localStorage.setItem("token", token);
-    } catch (err) {
-      throw err;
-    }
+    // Save token in local storage:
+    localStorage.setItem("token", token);
   }
 
   // Logout:

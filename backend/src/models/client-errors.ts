@@ -46,8 +46,8 @@ export class ValidationError extends ClientError {
     public static validate(document: Document): void {
         const error = document.validateSync();
         if (error) {
-            const messages = (error as any).errors
-                ? Object.values((error as any).errors).map((e: any) => e.message).join(" ")
+            const messages = error.errors
+                ? Object.values(error.errors).map((e) => e.message).join(" ")
                 : error.message;
 
             throw new ValidationError(messages);

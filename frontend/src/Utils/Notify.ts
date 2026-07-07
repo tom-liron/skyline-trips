@@ -22,7 +22,7 @@ class Notify {
     this.notyf.success(message);
   }
 
-  public error(err: any): void {
+  public error(err: unknown): void {
     const message =
       typeof err === "string"
         ? err

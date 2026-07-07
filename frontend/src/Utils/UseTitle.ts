@@ -12,5 +12,5 @@ import { useEffect } from "react";
 export function useTitle(title: string): void {
     useEffect(() => {
         document.title = `Skyline Trips | ${title}`;
-    }, []);
+    }, [title]);
 }
