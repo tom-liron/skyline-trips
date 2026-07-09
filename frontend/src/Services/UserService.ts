@@ -1,5 +1,5 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // npm i jwt-decode
+import { jwtDecode } from "jwt-decode";
 import { UserModel } from "../Models/UserModel";
 import { store } from "../Redux/Store";
 import { userSlice } from "../Redux/UserSlice";
@@ -84,8 +84,8 @@ class UserService {
     store.dispatch(userSlice.actions.logoutUser());
     localStorage.removeItem("token");
 
-    // Navigate to home (non-protected page)
-    window.location.href = routes.home; // hard redirect = no race condition
+    // Hard redirect to a public route — avoids auth guard race with cleared Redux state
+    window.location.href = routes.home;
   }
 }
 

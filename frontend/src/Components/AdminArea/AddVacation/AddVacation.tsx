@@ -69,7 +69,7 @@ export function AddVacation() {
             navigate(routes.adminVacations);
         } catch {
             notify.error("Failed to add vacation. Please check the form and try again.");
-            setIsSubmitting(false); // 
+            setIsSubmitting(false);
         }
     }
 

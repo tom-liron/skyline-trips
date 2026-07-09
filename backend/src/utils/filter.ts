@@ -8,7 +8,7 @@
 
 export type FilterType = "all" | "liked" | "active" | "upcoming";
 
-export function parseFilter(value: unknown): FilterType { // unknown? ?
+export function parseFilter(value: unknown): FilterType {
   const allowedFilters: FilterType[] = ["all", "liked", "active", "upcoming"];
 
   if (typeof value === "string" && allowedFilters.includes(value as FilterType)) {
